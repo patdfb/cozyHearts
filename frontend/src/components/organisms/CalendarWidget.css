@@ -1,0 +1,205 @@
+.calendar-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.calendar-card {
+  background-color: white; 
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #E5E5E5;
+  padding-bottom: 10px;
+}
+
+.month-label {
+  background-color: #E0CFFF; 
+  padding: 5px 15px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.year-label {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #105666;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+
+.weekday-header {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: bold;
+}
+
+.day {
+  padding: 5px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.day.sunday {
+  color: #D70004; 
+}
+
+.calendar-btn {
+  width: 90%;
+  font-size: 0.9rem !important;
+}
+
+.day {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  font-size: 0.9rem;
+}
+
+
+.dot-indicator {
+  width: 4px;
+  height: 4px;
+  background-color: #105666; 
+  border-radius: 50%;
+  position: absolute;
+  bottom: 2px;
+}
+
+.day.event-day {
+  font-weight: bold;
+}
+
+.calendar-btn {
+  width: 100%;
+  margin-top: 10px;
+}
+
+
+.day.other-month {
+  color: rgba(0, 0, 0, 0.15);
+  background: transparent;
+}
+
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  text-align: center;
+}
+
+.day {
+  padding: 8px 0;
+  font-size: 0.85rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dot-indicator {
+  width: 5px;
+  height: 5px;
+  background-color: #105666; 
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
+.calendar-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.calendar-select {
+  background-color: #F7F4D5; 
+  border: 2px solid #839958; 
+  color: #105666; 
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+  font-family: inherit;
+}
+
+.calendar-select:hover {
+  background-color: #839958;
+  color: white;
+}
+
+.calendar-header-display {
+  text-align: center;
+  margin-bottom: 15px;
+  text-transform: capitalize;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.year-select {
+  width: 100px;
+}
+
+/* O dia normal */
+.calendar-grid .day {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* Faz o dia ser um círculo perfeito */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  font-weight: 500;
+}
+
+/* O DIA COM EVENTO (Pintado) */
+.calendar-grid .day.event-day {
+  background-color: #839958; /* O teu verde da instituição */
+  color: white;              /* Texto branco para contrastar */
+  font-weight: bold;
+}
+
+/* Efeito ao passar o rato nos dias com evento */
+.calendar-grid .day.event-day:hover {
+  background-color: #105666; /* Muda para o teu azul ao passar o rato */
+  transform: scale(1.1);
+}
+
+/* O pontinho (dot) opcional, caso queiras manter os dois */
+.dot-indicator {
+  width: 4px;
+  height: 4px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 4px;
+}
+
+/* Dias de outros meses para não confundir */
+.day.other-month {
+  color: #ccc;
+  background-color: transparent !important; /* Garante que não pinta eventos de outros meses */
+}

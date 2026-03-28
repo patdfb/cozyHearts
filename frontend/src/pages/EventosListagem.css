@@ -1,0 +1,196 @@
+.listagem-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #105666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.back-btn:hover {
+  background-color: rgba(16, 86, 102, 0.1);
+}
+
+.listagem-title {
+  flex: 1;
+  color: #105666;
+  font-size: 2.2rem;
+  font-weight: 500;
+}
+
+.listagem-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.event-list-item {
+  background-color: #839958; /* Verde Fundo */
+  color: white;
+  border-radius: 25px;
+  padding: 25px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  max-width: 1000px; /* Limita a largura total do retângulo verde */
+  width: 90%;       /* Garante que em ecrãs pequenos ele use 90% da largura */
+  margin: 0 auto 20px auto; /* Centra horizontalmente e dá margem inferior */
+}
+
+/* Coluna do Texto */
+.event-info {
+  flex: 2.5; /* Aumentámos o peso do texto para ter mais espaço */
+  margin-right: 30px; /* Dá um espaço entre o texto e a imagem */
+}
+
+/* Coluna da Imagem */
+.event-image-container {
+  flex: 1.5; /* Mantemos o peso da imagem ligeiramente menor que o texto */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 250px; /* Garante um tamanho mínimo para a coluna da imagem */
+}
+
+/* Coluna dos Botões */
+.event-actions {
+  flex: 0 0 auto; /* Mantém os botões com tamanho fixo à direita */
+  display: flex;
+  gap: 15px;
+  margin-left: 20px;
+}
+
+.event-thumbnail {
+  width: 100%;    /* Ocupa a largura total permitida pelo event-image-container */
+  max-width: 300px; /* Limite máximo para a imagem não ficar gigante */
+  height: 180px;  /* Altura maior que definimos antes */
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.event-actions {
+  flex: 0 0 auto; /* Mantém os botões à direita com tamanho fixo */
+  display: flex;
+  gap: 10px;
+}
+
+.event-info h3 {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.event-info p {
+  font-size: 1rem;
+  margin: 4px 0;
+  opacity: 0.9;
+}
+
+.event-info p span {
+  font-weight: 300;
+}
+
+.event-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.action-btn {
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+.edit-btn {
+  background-color: #105666; /* Azul Botões */
+}
+
+.delete-btn {
+  background-color: #D70004; /* Vermelho Cancelar */
+}
+
+.no-events-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  color: #105666; /* Teu azul */
+  gap: 15px;
+  border: 2px dashed #839958; /* Verde do tema */
+  text-align: center;
+}
+
+.no-events-message p {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.listagem-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.filter-toggle-btn {
+  background-color: transparent;
+  border: 2px solid #105666;
+  color: #105666;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.filter-toggle-btn:hover {
+  background-color: #105666;
+  color: white;
+}
+
+.filter-toggle-btn.active {
+  background-color: #839958; /* Verde quando estiver a mostrar os passados */
+  border-color: #839958;
+  color: white;
+}

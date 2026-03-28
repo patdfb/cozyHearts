@@ -1,0 +1,91 @@
+.main-header {
+  background-color: #105666;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* LOGO - Ajustado para não sair do header */
+.logo-link {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.header-logo-img {
+  height: 65px; /* Tamanho controlado para não deformar */
+  width: auto;
+  transition: transform 0.2s;
+}
+
+.header-logo-img:hover {
+  transform: scale(1.05);
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.nav-item {
+  text-decoration: none;
+  background-color: #0d4654;
+  color: white;
+  padding: 8px 22px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.nav-item.active {
+  background-color: #1c7a8a;
+  font-weight: bold;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 5px 12px;
+  border-radius: 12px;
+  transition: background 0.2s;
+}
+
+.user-profile-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.inst-name {
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 500;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.icon-link {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s;
+}
+
+.icon-link:hover { opacity: 0.7; }

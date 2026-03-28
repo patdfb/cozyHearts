@@ -1,0 +1,88 @@
+.registar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2100; 
+}
+
+.registar-card {
+  background-color: #F7F4D5; 
+  padding: 30px 40px;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #105666;
+}
+
+.registar-title {
+  font-size: 2.2rem;
+  margin-bottom: 5px;
+  color: #000;
+  font-weight: bold;
+}
+
+.registar-divider {
+  border: 0.5px solid #ccc;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.registar-input-group {
+  background-color: #D9D9D9; 
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.registar-icon {
+  margin-right: 12px;
+  color: #105666; 
+  display: flex;
+}
+
+.registar-input-group input {
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1rem;
+  color: #333;
+}
+
+.registar-submit-btn {
+  background-color: #105666;
+  color: white;
+  width: 80%; 
+  padding: 12px;
+  border-radius: 20px;
+  border: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background 0.3s;
+}
+
+.registar-submit-btn:hover {
+  background-color: #1c7a8a;
+}

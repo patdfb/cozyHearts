@@ -1,0 +1,161 @@
+.calendar-page-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding-top: 20px;
+  position: relative;
+}
+
+
+.calendar-back-btn {
+  background: none;
+  border: none;
+  color: #105666;
+  cursor: pointer;
+  padding: 10px;
+  transition: transform 0.2s;
+}
+
+.calendar-back-btn:hover {
+  transform: scale(1.1);
+}
+
+.calendar-main-panel {
+  flex: 1;
+  background-color: #839958; 
+  border-radius: 25px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.calendar-nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.current-month-label {
+  font-size: 2rem;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.nav-arrow {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
+
+.calendar-grid-body {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: white;
+  border-radius: 15px;
+  padding: 15px;
+  gap: 1px;
+}
+
+.weekday-cell {
+  text-align: center;
+  font-weight: bold;
+  color: #666;
+  padding: 10px 0;
+  font-size: 0.8rem;
+}
+
+.day-cell {
+  min-height: 110px; 
+  border: 1px solid #f0f0f0;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-number {
+  align-self: flex-end;
+  font-size: 0.9rem;
+}
+
+
+.calendar-grid-body > .day-cell:nth-child(7n+1) .day-number {
+  color: #D70004;
+}
+
+.day-cell.other-month {
+  color: #ccc;
+}
+
+
+.events-labels-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 5px;
+}
+
+.calendar-event-label {
+  background-color: #105666; 
+  color: white;
+  font-size: 0.72rem;
+  padding: 4px 6px;
+  border-radius: 6px;
+  border-left: 4px solid #F7F4D5;
+  cursor: pointer;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word; 
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+.calendar-event-label:hover {
+  filter: brightness(1.2);
+  z-index: 10; 
+}
+
+.calendar-nav-header {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 0 10px;
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.calendar-page-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.calendar-page-select {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 2px solid #839958; 
+  background-color: white;
+  color: #105666; 
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+}
+
+.calendar-page-select:hover {
+  border-color: #105666;
+}
+
+.today-cell {
+  background-color: #fffdf0 !important; 
+  border: 2px solid #839958 !important;
+}

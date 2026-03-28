@@ -1,0 +1,247 @@
+.perfil-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+}
+
+.perfil-card {
+  background-color: #F7F4D5; /* O teu creme */
+  width: 90%;
+  max-width: 450px;
+  border-radius: 40px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.perfil-back-btn {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.perfil-back-btn:hover { transform: scale(1.1); }
+
+.perfil-avatar-container {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.perfil-avatar-bg {
+  background-color: #D9D9D9;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.perfil-info-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.perfil-field {
+  background-color: #D9D9D9;
+  border-radius: 20px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.field-icon {
+  color: #105666;
+  display: flex;
+  align-items: center;
+}
+
+.logout-btn {
+  background-color: #105666;
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 20px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  width: 80%;
+  transition: background 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: #166d81;
+}
+
+.perfil-header-actions {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.perfil-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #105666;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.perfil-action-btn:hover { background-color: rgba(16, 86, 102, 0.1); }
+
+.avatar-wrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  background: #D9D9D9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #839958;
+}
+
+.user-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.modal-camera-label {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #105666;
+  color: white;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.perfil-item input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #105666;
+  width: 100%;
+  font-size: 1rem;
+  outline: none;
+  color: #105666;
+}
+
+.confirm-edit-btn {
+  background-color: #839958;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+.perfil-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 5000;
+}
+
+.perfil-card {
+  background-color: #F7F4D5;
+  width: 90%; max-width: 420px;
+  border-radius: 35px;
+  padding: 25px;
+  display: flex; flex-direction: column; align-items: center;
+}
+
+.perfil-header-icons {
+  width: 100%;
+  display: flex; justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.icon-btn { background: none; border: none; cursor: pointer; }
+
+/* Foto */
+.perfil-avatar-wrapper {
+  margin-bottom: 25px;
+}
+
+.avatar-circle {
+  width: 140px; height: 140px;
+  background-color: #D9D9D9;
+  border-radius: 50%;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  overflow: visible;
+}
+
+.avatar-circle img {
+  width: 100%; height: 100%;
+  border-radius: 50%; object-fit: cover;
+}
+
+.camera-badge {
+  position: absolute;
+  bottom: 5px; right: 5px;
+  background-color: #105666;
+  padding: 8px; border-radius: 50%;
+  cursor: pointer; display: flex;
+}
+
+/* AS BARRAS CINZENTAS */
+.perfil-fields-container {
+  width: 100%;
+  display: flex; flex-direction: column; gap: 12px;
+  margin-bottom: 25px;
+}
+
+.perfil-bar {
+  background-color: #D9D9D9; /* O cinza do print */
+  border-radius: 20px;
+  padding: 12px 20px;
+  display: flex; align-items: center; gap: 15px;
+  color: #333; font-size: 1rem;
+}
+
+.perfil-bar input {
+  background: transparent; border: none; outline: none;
+  width: 100%; color: #105666; font-family: inherit;
+  font-size: 1rem;
+}
+
+/* Botão Terminar Sessão / Guardar */
+.perfil-main-btn {
+  background-color: #105666;
+  color: white; border: none;
+  padding: 14px 0; width: 220px;
+  border-radius: 20px; font-weight: bold;
+  font-size: 1.2rem; cursor: pointer;
+}
+
+.perfil-main-btn.logout { background-color: #105666; }

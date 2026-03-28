@@ -1,0 +1,84 @@
+.landing-page {
+  min-height: 100vh;
+  background-color: #F7F4D5; 
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-main {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.welcome-hero {
+  margin-bottom: 50px;
+}
+
+.welcome-hero h1 {
+  font-size: 2.8rem;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.welcome-hero p {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.welcome-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; 
+  gap: 40px;
+  align-items: start;
+}
+
+.info-card {
+  background-color: #839958; 
+  color: white;
+  padding: 40px;
+  border-radius: 30px;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.info-card h2 {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+}
+
+.info-card ol, .info-card ul {
+  font-size: 1.4rem;
+  line-height: 1.8;
+  padding-left: 25px;
+}
+
+.image-column .image-frame {
+  background-color: #839958; 
+  padding: 40px; 
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 97px; 
+  height: 200%; 
+  justify-content: center; 
+}
+
+
+.image-frame img {
+  width: 100%;
+  border-radius: 15px;
+  object-fit: cover; 
+  height: 200px; 
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+
+.welcome-footer {
+  background-color: #839958;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-size: 1.1rem;
+}

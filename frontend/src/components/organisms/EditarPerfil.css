@@ -1,0 +1,112 @@
+.edit-profile-page {
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.edit-profile-container {
+  background-color: #F7F4D5; /* O teu creme */
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+  border-radius: 40px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.edit-profile-title {
+  text-align: center;
+  color: #105666;
+  margin-bottom: 30px;
+  font-size: 2.2rem;
+}
+
+/* ESTILO DA FOTO */
+.avatar-upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.avatar-preview {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #D9D9D9;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #839958; /* O teu verde */
+}
+
+.avatar-preview img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.camera-icon-label {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background-color: #105666;
+  color: white;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* INPUTS */
+.edit-fields-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.edit-input-group {
+  display: flex;
+  align-items: center;
+  background-color: #D9D9D9;
+  border-radius: 15px;
+  height: 55px;
+  overflow: hidden;
+}
+
+.edit-icon-box {
+  min-width: 55px;
+  height: 100%;
+  background-color: #105666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.edit-input-group input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0 20px;
+  font-size: 1.1rem;
+  outline: none;
+}
+
+.save-profile-btn {
+  background-color: #105666;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 15px;
+  border-radius: 15px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.save-profile-btn:hover { transform: scale(1.02); }

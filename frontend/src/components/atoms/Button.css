@@ -1,0 +1,18 @@
+.custom-btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: opacity 0.2s;
+}
+
+.primary { background-color: #105666; color: white; } /* Azul Botões */
+.secondary { 
+  background-color: transparent; 
+  border: 2px solid #105666; 
+  color: #105666; 
+}
+.danger { background-color: #D70004; color: white; } /* Vermelho Cancelar */
+
+.custom-btn:hover { opacity: 0.8; }

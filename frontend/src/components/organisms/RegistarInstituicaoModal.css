@@ -1,0 +1,77 @@
+.inst-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.inst-card {
+  background-color: #F7F4D5;
+  padding: 35px 45px;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.inst-title { font-size: 2rem; color: #000; margin-bottom: 5px; }
+.inst-divider { border: 0.5px solid #ccc; margin-bottom: 20px; }
+
+.inst-input-group {
+  background-color: #D9D9D9;
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 20px;
+  margin-bottom: 15px;
+}
+
+.inst-icon { margin-right: 12px; color: #105666; display: flex; }
+.inst-input-group input {
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 1rem;
+}
+
+
+.file-selected .file-label {
+  color: #105666; 
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+}
+
+.file-label {
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  display: block;
+}
+
+.hidden-input {
+  display: none; 
+}
+
+.inst-submit-btn {
+  background-color: #105666;
+  color: white;
+  width: 70%;
+  padding: 14px;
+  border-radius: 20px;
+  border: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-top: 10px;
+}

@@ -1,0 +1,80 @@
+.event-card-container {
+  display: flex;
+  background-color: #fdfae9; /* Tom bege clarinho do design */
+  border-radius: 20px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+  border: 1px solid rgba(16, 86, 102, 0.1);
+  height: 100px; /* Altura fixa para manter o alinhamento no Dashboard */
+}
+
+.event-card-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.event-image-side {
+  width: 100px;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.event-image-side img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #e2e8ce;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-details-side {
+  padding: 12px 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.event-card-title {
+  color: #105666; /* Azul escuro do tema */
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.event-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  color: #444;
+}
+
+.icon-teal {
+  color: #105666;
+  margin-right: 6px;
+}
+
+.spacing-left {
+  margin-left: 15px;
+}
+
+.text-small {
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

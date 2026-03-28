@@ -1,0 +1,47 @@
+/* src/components/template/MainLayout.css */
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* GARANTE QUE NÃO HÁ PADDING OU MARGEM AQUI NO TOPO */
+  padding: 0;
+  margin: 0;
+}
+
+.main-content-wrapper {
+  flex: 1;
+  /* O padding dos lados e de baixo é aplicado APENAS ao conteúdo, não ao Header */
+  padding: 20px; 
+  /* Centraliza o conteúdo se o ecrã for muito largo, como no Figma */
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* src/components/template/MainLayout.css */
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ocupa a altura toda da tela */
+  width: 100%;
+}
+
+.main-content-wrapper {
+  flex: 1; /* Empurra o footer para o fundo se houver pouco conteúdo */
+  padding: 20px;
+  max-width: 1200px; /* Mantém os painéis verdes centrados */
+  margin: 0 auto;
+  width: 100%;
+}
+
+.main-footer {
+  background-color: #839958; /* O teu Verde Fundo */
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  width: 100%; /* Garante que atravessa o ecrã todo */
+  font-size: 0.9rem;
+  margin-top: 20px;
+}

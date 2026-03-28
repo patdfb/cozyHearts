@@ -1,0 +1,115 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr; /* Esquerda maior que a direita */
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.panel {
+  background-color: #839958; /* Verde Fundo */
+  border-radius: 25px;
+  padding: 20px;
+}
+
+.summary-panel {
+  background-color: #839958;
+  border-radius: 25px;
+  padding: 20px;
+  color: white;
+}
+
+.summary-title {
+  font-size: 1.8rem;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr; /* Lado esquerdo um pouco maior */
+  gap: 25px;
+  margin-top: 20px;
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+.panel {
+  background-color: #839958; /* Verde do Figma */
+  border-radius: 25px;
+  padding: 25px;
+}
+
+.panel-title {
+  color: white;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-weight: 400;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.panel-footer-btns {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Estilo específico para a lista de eventos para permitir scroll se houver muitos */
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr; 
+  gap: 25px;
+  margin-top: 20px;
+  max-width: 1200px;
+  margin-inline: auto;
+  /* Garante que a linha do grid estique os filhos */
+  align-items: stretch; 
+}
+
+.events-section {
+  /* Forçamos o painel da esquerda a ser um flex container 
+     para empurrar os botões para o fundo */
+  display: flex;
+  flex-direction: column;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex-grow: 1; /* Faz a lista ocupar o espaço e empurrar os botões */
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  /* IMPORTANTE: Faz a coluna da direita ter a altura total do Grid */
+  height: 100%; 
+}
+
+.summary-panel, .summary-section {
+  /* Faz o painel de resumo crescer para ocupar o espaço que sobra 
+     e alinhar a base com o painel da esquerda */
+  flex-grow: 1; 
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-footer-btns {
+  display: flex;
+  gap: 15px;
+  margin-top: auto; /* Garante que os botões ficam sempre no fundo */
+  padding-top: 20px;
+}
