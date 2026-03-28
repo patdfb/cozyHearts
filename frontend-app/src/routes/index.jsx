@@ -5,6 +5,7 @@ import Register from '../pages/Register/Register'
 import RegisterChoice from '../pages/Register/RegisterChoice'
 import RegisterFam from '../pages/Register/RegisterFam'
 import Main from '../pages/Main'
+import MyGroups from '../pages/GroupsAndEvents/MyGroups'
 
 
 const router = createBrowserRouter([
@@ -20,19 +21,22 @@ const router = createBrowserRouter([
     path: '/register-choice',
     element: <RegisterChoice />,
   },
-    {
+  {
     path: '/register-family',
     element: <RegisterFam />,
   },
-    {
+  {
     path: '/register',
     element: <Register />,
   },
-    {
+  {
     path: '/main',
     element: <Main />,
   },
-
+  {
+    path: '/myGroups',
+    element: <MyGroups />,
+  },
   {
     path: '*',
     element: <Navigate to="/" replace />,
