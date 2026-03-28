@@ -11,7 +11,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Permite apenas o teu frontend
+  origin: process.env.CORS_ORIGIN || 'https://www.cozyhearts.instituicoes.pt',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
