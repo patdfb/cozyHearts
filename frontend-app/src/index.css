@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -109,3 +111,15 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+@theme {
+  --color-button: #839958;
+  --color-button-selected: #50622A;
+  --color-container: #E6EEDB;
+  --color-background: #F7F4D5;
+  --color-background-footer: #2C2C2C;
+  --color-error: #B3261E;
+  --color-error-container: #F9DEDC;
+  --color-text-light: #49454F;
+}
+
