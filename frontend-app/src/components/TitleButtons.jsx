@@ -1,24 +1,28 @@
-import { ArrowLeft } from 'lucide-react'
 import Button from './Button'
-import { useNavigate } from 'react-router-dom'
+import Title from './Title'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export default function TitleButtons() {
 
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+
 
   return (
     <div className="w-full flex flex-col">
-        <div className="flex place-items-center flex-row justify-left gap-4 px-4 mt-7 mb-4">
-            <ArrowLeft size={25}/>
-            <p className="text-2xl font-bold">
-                {"Os meus grupos e eventos"} 
-            </p> 
+        <Title name={"Os meus grupos e eventos"}/>
+        <div className="flex flex-row justify-left px-4">
+            <Button
+              name="Grupos"
+              selected={pathname === '/myGroups'}
+              onClick={() => navigate('/myGroups')}
+            />
+            <Button
+              name="Eventos"
+              selected={pathname === '/myEvents'}
+              onClick={() => navigate('/myEvents')}
+            />
         </div>
-        <div className="flex flex-row justify-left">
-            <Button name="Grupos" onClick={() => navigate('/myGroups')}/>
-            <Button name="Eventos" onClick={() => navigate('/myEvents')}/>
-        </div>
-
     </div>
 
   )

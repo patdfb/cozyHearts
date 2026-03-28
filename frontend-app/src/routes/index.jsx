@@ -6,6 +6,8 @@ import RegisterChoice from '../pages/Register/RegisterChoice'
 import RegisterFam from '../pages/Register/RegisterFam'
 import Main from '../pages/Main'
 import MyGroups from '../pages/GroupsAndEvents/MyGroups'
+import MyEvents from '../pages/GroupsAndEvents/MyEvents'
+import EventsNearMe from '../pages/EventsNearMe'
 
 
 const router = createBrowserRouter([
@@ -36,6 +38,14 @@ const router = createBrowserRouter([
   {
     path: '/myGroups',
     element: <MyGroups />,
+  },
+  {
+    path: '/myEvents',
+    element: <MyEvents />,
+  },
+  {
+    path: '/eventsNearMe',
+    element: <EventsNearMe />,
   },
   {
     path: '*',

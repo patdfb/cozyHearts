@@ -12,9 +12,9 @@ function Main() {
                 <p className="text-5xl font-bold">
                     {"Bom Dia, Felipe"} {/* TO DO alta trocar hora do dia "boa tarde", "bom dia", "boa noite"; e ligar nome de usuário com backend */}
                 </p> 
-                <BigButton name="Grupos e eventos" onClick={() => navigate('/groups-events')}/> {/* onClick={ lógica de login} */}
+                <BigButton name="Grupos e eventos" onClick={() => navigate('/myGroups')}/> {/* onClick={ lógica de login} */}
                 <BigButton name="Interesses" onClick={() => navigate('/interests')}/> {/* onClick={lógica de login} */}
-                <BigButton name="Perto de mim" onClick={() => navigate('/near-me')} />
+                <BigButton name="Perto de mim" onClick={() => navigate('/eventsNearMe')} />
                 <BigButton name="Ajuda" onClick={() => navigate('/help')} />
             </div>
             <ProfileFooter/>
