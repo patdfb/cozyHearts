@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="Widget.Theme.CozyHearts.MyView" parent="">
+        <item name="android:background">@color/button</item>
+        <item name="exampleColor">@color/button_selected</item>
+    </style>
+</resources>
