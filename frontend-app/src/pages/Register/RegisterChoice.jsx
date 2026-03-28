@@ -12,7 +12,7 @@ function RegisterChoice() {
         <div className="mx-auto flex w-fit flex-col gap-10 text-center">
             <p className='text-3xl text-black font-bold'> Quem está a criar conta?</p>
             <BigButton name="O próprio" onClick={() => navigate('/register')}/> {/* onClick={ lógica de login} */}
-            <BigButton name="Um familiar / outro" onClick={() => navigate('/register-fam')}/> {/* onClick={ lógica de login} */}
+            <BigButton name="Um familiar / outro" onClick={() => navigate('/register-family')}/> {/* onClick={ lógica de login} */}
 
         </div>
       </section>
