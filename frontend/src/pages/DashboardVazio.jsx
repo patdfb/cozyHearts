@@ -11,16 +11,22 @@ const DashboardVazio = () => {
   React.useEffect(() => {
     const fetchNome = async () => {
       try {
-        const session = JSON.parse(localStorage.getItem('supabase_session'));
-        const token = session?.access_token;
+        // Tenta obter o token de supabase_token ou supabase_session
+        let token = localStorage.getItem('supabase_token');
+        if (!token) {
+          const session = JSON.parse(localStorage.getItem('supabase_session'));
+          token = session?.access_token;
+        }
         if (!token) return;
         const response = await fetch('http://localhost:3000/membros/me', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) return;
         const data = await response.json();
-        setNome(data.Nome || 'Utilizador');
-      } catch {}
+        setNome(data.Nome && data.Nome.trim() ? data.Nome : 'Utilizador');
+      } catch {
+        setNome('Utilizador');
+      }
     };
     fetchNome();
   }, []);

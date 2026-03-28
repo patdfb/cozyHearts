@@ -95,28 +95,20 @@
     },
 
   async updatePerfil(formData) {
-    const token = localStorage.getItem('supabase_token') ||
-      JSON.parse(localStorage.getItem('supabase_session'))?.access_token;
+    const token = localStorage.getItem('supabase_token');
 
-    const response = await fetch(`${API_BASE_URL}/auth/update-perfil`, {
+    const response = await fetch(`${API_BASE_URL}/membros/me`, {
       method: 'PUT',
       headers: { 
         'Authorization': `Bearer ${token}`
-        // IMPORTANTE: Ao usar FormData, não definimos Content-Type manualmente
+        // NOTA: O browser define o Content-Type automaticamente para FormData
       },
       body: formData
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      let message = 'Erro ao atualizar perfil';
-      try {
-        const errorJson = JSON.parse(errorText);
-        message = errorJson.error || message;
-      } catch (e) {
-        message = errorText || message;
-      }
-      throw new Error(message);
+      throw new Error(errorText || 'Erro na API');
     }
 
     return await response.json();

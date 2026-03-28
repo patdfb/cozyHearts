@@ -26,17 +26,39 @@ async function requireMembro(req, res, next) {
   next()
 }
 
-// Get activities where Membro is Organizador
+// Get all activities organized by any member of the same institution
 router.get('/', requireMembro, async (req, res) => {
-  const { data, error } = await supabase
+  // 1. Buscar todos os membros da mesma instituição
+  const { data: membros, error: membrosError } = await supabase
+    .from('Membro')
+    .select('id')
+    .eq('id_Instituicao', req.membro.id_Instituicao);
+
+  if (membrosError) return res.status(500).json({ error: membrosError.message });
+  if (!membros || membros.length === 0) return res.json([]);
+
+  const membrosIds = membros.map(m => m.id);
+
+  // 2. Buscar todos os eventos organizados por esses membros
+  const { data: participantes, error: partError } = await supabase
     .from('Participante')
     .select('*, Atividade(*, Interesse(*), Localidade(*))')
-    .eq('Id_Membro', req.membro.id)
-    .eq('Organizador', true)
+    .in('Id_Membro', membrosIds)
+    .eq('Organizador', true);
 
-  if (error) return res.status(500).json({ error: error.message });
-  if (!data || !Array.isArray(data)) return res.json([]);
-  res.json(data.map(p => p.Atividade));
+  if (partError) return res.status(500).json({ error: partError.message });
+  if (!participantes || participantes.length === 0) return res.json([]);
+
+  // 3. Remover eventos duplicados (caso haja)
+  const eventosMap = {};
+  participantes.forEach(p => {
+    if (p.Atividade && !eventosMap[p.Atividade.id]) {
+      eventosMap[p.Atividade.id] = p.Atividade;
+    }
+  });
+  const eventos = Object.values(eventosMap);
+
+  res.json(eventos);
 });
 
 // Get single activity

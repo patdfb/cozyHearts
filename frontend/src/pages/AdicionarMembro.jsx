@@ -8,10 +8,25 @@ const AdicionarMembro = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
 
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
-    alert(`Convite enviado para: ${email}`);
-    navigate('/dashboard');
+    try {
+      const token = localStorage.getItem('supabase_token') || JSON.parse(localStorage.getItem('supabase_session'))?.access_token;
+      const response = await fetch('http://localhost:3000/membros/invite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ email })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Erro ao adicionar membro');
+      alert(data.message || `Convite enviado para: ${email}`);
+      navigate('/dashboard');
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (

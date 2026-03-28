@@ -48,32 +48,32 @@ const EditarPerfil = () => {
   };
 
   const handleSave = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem('supabase_token');
-      
-      // Criar FormData para suportar upload de imagem
-      const formData = new FormData();
-      formData.append('nome', userData.nome);
-      formData.append('telefone', userData.telefone);
-      formData.append('nascimento', userData.nascimento);
-      if (userData.fotoFile) {
-        formData.append('image', userData.fotoFile);
-      }
+  e.preventDefault();
+  try {
+    const token = localStorage.getItem('supabase_token');
+    const formData = new FormData();
 
-      // 3. Chamar a API
-      const updatedUser = await authService.updatePerfil(formData, token);
-      
-      // 4. ATUALIZAR LOCALSTORAGE com os novos dados
-      localStorage.setItem('user_data', JSON.stringify(updatedUser));
-      
-      alert("Perfil atualizado com sucesso!");
-      navigate('/dashboard');
-    } catch (error) {
-      alert('Erro ao atualizar perfil: ' + error.message);
+    // CRUCIAL: Usa nomes em minúsculas para o req.body ler facilmente
+    formData.append('nome', userData.nome);
+    formData.append('telefone', userData.telefone);
+    formData.append('nascimento', userData.nascimento);
+    
+    if (userData.fotoFile) {
+      formData.append('image', userData.fotoFile);
     }
-  };
 
+    // Envia para o serviço
+    const updatedUser = await authService.updatePerfil(formData);
+    
+    // Atualiza o Browser (LocalStorage) com o que o Supabase devolveu
+    localStorage.setItem('user_data', JSON.stringify(updatedUser));
+    
+    alert("Perfil atualizado com sucesso!");
+    navigate('/dashboard');
+  } catch (error) {
+    alert('Erro ao atualizar: ' + error.message);
+  }
+};
   return (
     <MainLayout>
       <div className="edit-profile-page">

@@ -5,7 +5,7 @@ import './RegistarModel.css';
 
 const RegistarModel = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
-    nome: '', email: '', telemovel: '', nascimento: '', password: ''
+    nome: '', email: '', telemovel: '', data_de_nascimento: '', password: ''
   });
   const [error, setError] = useState('');
 
@@ -62,7 +62,7 @@ const RegistarModel = ({ isOpen, onClose }) => {
             <div className="registar-icon"><Calendar size={20} /></div>
             <input 
               type="date" placeholder="Data Nascimento" 
-              onChange={(e) => setFormData({...formData, nascimento: e.target.value})}
+              onChange={(e) => setFormData({...formData, data_de_nascimento: e.target.value})}
             />
           </div>
 

@@ -17,9 +17,22 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegistar }) => {
     setError('');
     try {
       const data = await authService.login(email, password);
-      // Decide para onde navegar com base no status
-      if (data.status === 'verified') {
-        navigate('/dashboard');
+      // Buscar membro e decidir redirecionamento
+      const token = data.token || localStorage.getItem('supabase_token') || JSON.parse(localStorage.getItem('supabase_session'))?.access_token;
+      if (token) {
+        const res = await fetch('http://localhost:3000/membros/me', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const membro = await res.json();
+        if (membro.id_Instituicao) {
+          if (membro.Instituicao && membro.Instituicao.Verificacao) {
+            navigate('/dashboard');
+          } else {
+            navigate('/registo-analise');
+          }
+        } else {
+          navigate('/bem-vindo'); // ou a página de registo de instituição
+        }
       } else {
         navigate('/bem-vindo');
       }

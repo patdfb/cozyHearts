@@ -5,6 +5,7 @@ import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import atividadesRoutes from './routes/atividades.js';
 import membrosRoutes from './routes/membros.js';
+import instituicaoRoutes from './routes/instituicao.js';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/atividades', atividadesRoutes);
 app.use('/membros', membrosRoutes);
+app.use('/instituicao', instituicaoRoutes);
 
 app.get('/', (req, res) => res.json({ message: 'Backend a funcionar com ES Modules!' }));
 

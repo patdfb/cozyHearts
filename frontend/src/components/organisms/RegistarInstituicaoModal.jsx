@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // Adicionámos o useState
+import React, { useState, useRef } from 'react';
 import { User, MapPin, Globe, FileText, X, Building2, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './RegistarInstituicaoModal.css';
@@ -6,24 +6,85 @@ import './RegistarInstituicaoModal.css';
 const RegistarInstituicaoModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   
-  // ESTADO PARA O NOME DO FICHEIRO
+  // ESTADO PARA O NOME DO FICHEIRO E DADOS DO FORM
   const [fileName, setFileName] = useState("Comprovativo de Instituição (PDF)");
+  const [form, setForm] = useState({
+    nome: '',
+    endereco: '',
+    localidade: '',
+    cidade: ''
+  });
+  const [file, setFile] = useState(null);
+  const fileInputRef = useRef();
 
   if (!isOpen) return null;
 
   // FUNÇÃO PARA CAPTURAR A MUDANÇA NO INPUT
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFileName(file.name); // Atualiza o estado com o nome do ficheiro escolhido
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFileName(selectedFile.name);
+      setFile(selectedFile);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleInputChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Instituição registada com sucesso!");
-    navigate('/registo-analise');
-    onClose();
+    if (!file) return alert('Por favor selecione o comprovativo em PDF.');
+    const formData = new FormData();
+    formData.append('nome', form.nome);
+    formData.append('endereco', form.endereco);
+    formData.append('localidade', form.localidade);
+    formData.append('cidade', form.cidade);
+    formData.append('comprovativo', file);
+
+    try {
+      const response = await fetch('http://localhost:3000/instituicao/register', {
+        method: 'POST',
+        body: formData
+      });
+      const text = await response.text();
+      console.log('Resposta do servidor:', text);
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (jsonErr) {
+        // Mostra o erro e o texto recebido
+        alert('Erro inesperado: resposta não é JSON.\n' + text);
+        return;
+      }
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao registar instituição');
+      }
+      // Associar o membro autenticado ao id da instituição criada
+      const idInstituicao = data.instituicao?.id;
+      if (idInstituicao) {
+        const token = localStorage.getItem('supabase_token') || JSON.parse(localStorage.getItem('supabase_session'))?.access_token;
+        await fetch('http://localhost:3000/membros/me', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ id_Instituicao: idInstituicao })
+        });
+      }
+      alert('Instituição registada com sucesso!');
+      localStorage.setItem('nomeInstituicaoRegistada', form.nome);
+      navigate('/registo-analise', { state: { nomeInstituicao: form.nome } });
+      onClose();
+      // Limpar formulário
+      setForm({ nome: '', endereco: '', localidade: '', cidade: '' });
+      setFileName('Comprovativo de Instituição (PDF)');
+      setFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (
@@ -37,22 +98,50 @@ const RegistarInstituicaoModal = ({ isOpen, onClose }) => {
         <form onSubmit={handleSubmit}>
           <div className="inst-input-group">
             <div className="inst-icon"><User size={20} /></div>
-            <input type="text" placeholder="Identificador" required />
+            <input
+              type="text"
+              placeholder="Identificador"
+              name="nome"
+              value={form.nome}
+              onChange={handleInputChange}
+              required
+            />
           </div>
 
           <div className="inst-input-group">
             <div className="inst-icon"><MapPin size={20} /></div>
-            <input type="text" placeholder="Morada" required />
+            <input
+              type="text"
+              placeholder="Morada"
+              name="endereco"
+              value={form.endereco}
+              onChange={handleInputChange}
+              required
+            />
           </div>
 
           <div className="inst-input-group">
             <div className="inst-icon"><Building2 size={20} /></div>
-            <input type="text" placeholder="Localidade" required />
+            <input
+              type="text"
+              placeholder="Localidade"
+              name="localidade"
+              value={form.localidade}
+              onChange={handleInputChange}
+              required
+            />
           </div>
 
           <div className="inst-input-group">
-            <div className="inst-icon"><Globe  size={20} /></div>
-            <input type="text" placeholder="Cidade" required />
+            <div className="inst-icon"><Globe size={20} /></div>
+            <input
+              type="text"
+              placeholder="Cidade"
+              name="cidade"
+              value={form.cidade}
+              onChange={handleInputChange}
+              required
+            />
           </div>
 
           {/* INPUT DE FICHEIRO ATUALIZADO */}
@@ -61,15 +150,16 @@ const RegistarInstituicaoModal = ({ isOpen, onClose }) => {
               {fileName !== "Comprovativo de Instituição (PDF)" ? <Check size={20} color="#839958" /> : <FileText size={20} />}
             </div>
             <label htmlFor="pdf-upload" className="file-label">
-              {fileName} {/* Mostra o nome do estado aqui */}
+              {fileName}
             </label>
-            <input 
-              id="pdf-upload" 
-              type="file" 
-              accept="application/pdf" 
+            <input
+              id="pdf-upload"
+              type="file"
+              accept="application/pdf"
               className="hidden-input"
-              onChange={handleFileChange} // Chama a função quando escolhes o ficheiro
-              required 
+              onChange={handleFileChange}
+              ref={fileInputRef}
+              required
             />
           </div>
 

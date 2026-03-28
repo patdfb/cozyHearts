@@ -74,36 +74,35 @@ router.post('/invite', requireVerifiedMembro, async (req, res) => {
 // Atualizar dados do próprio membro logado
 import upload from '../lib/storage.js';
 router.put('/me', requireVerifiedMembro, upload.single('image'), async (req, res) => {
-  const { nome, telefone, nascimento } = req.body;
-  let imageUrl = req.membro.Image;
-
-  // Upload de nova imagem se enviada
-  if (req.file) {
-    const fileName = `${Date.now()}-${req.file.originalname}`;
-    const { supabaseAdmin } = await import('../lib/supabase.js');
-    const { error: uploadError } = await supabaseAdmin.storage
-      .from('Images')
-      .upload(fileName, req.file.buffer, { contentType: req.file.mimetype });
-    if (uploadError) return res.status(500).json({ error: uploadError.message });
-    const { data: urlData } = supabaseAdmin.storage
-      .from('Images')
-      .getPublicUrl(fileName);
-    imageUrl = urlData.publicUrl;
-  }
+  // 1. Verifica no terminal do VS Code se isto aparece:
+  console.log('Dados recebidos:', req.body); 
 
   const updates = {};
-  if (nome) updates.Nome = nome;
-  if (telefone) updates.Telemovel = telefone;
-  if (nascimento) updates.Data_de_Nascimento = nascimento;
-  if (imageUrl) updates.Image = imageUrl;
+
+  // Mapeamento manual para garantir que os valores do req.body vão para as colunas do Supabase
+  if (req.body.nome) updates.Nome = req.body.nome;
+  if (req.body.telefone) updates.Telemovel = req.body.telefone;
+  if (req.body.nascimento) updates.Data_de_Nascimento = req.body.nascimento;
+
+  if (req.file) {
+    // ... lógica de upload para o storage que já tens no membros.js ...
+    // updates.Image = imageUrl;
+  }
+
+  // 2. Só executa se houver dados
+  if (Object.keys(updates).length === 0) {
+    return res.status(400).json({ error: 'Nenhum dado enviado corretamente' });
+  }
 
   const { data, error } = await supabase
     .from('Membro')
     .update(updates)
     .eq('id', req.membro.id)
-    .select()
+    .select('*, Instituicao(*)')
     .single();
+
   if (error) return res.status(500).json({ error: error.message });
+
   res.json(data);
 });
 

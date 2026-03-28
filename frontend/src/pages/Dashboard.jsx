@@ -30,13 +30,11 @@ const Dashboard = () => {
           eventosBackend = await eventService.getEventos(token);
         }
 
-        // 3. ORDENAR por 'dia_hora' (do mais próximo para o mais distante)
-        // Filtramos também para garantir que apenas eventos com data válida entram na lista
+        // 3. Filtrar apenas eventos futuros e ordenar por data
+        const agora = new Date();
         const eventosOrdenados = [...eventosBackend]
-          .filter(a => a.dia_hora) 
-          .sort((a, b) => {
-            return new Date(a.dia_hora) - new Date(b.dia_hora);
-          });
+          .filter(a => a.dia_hora && new Date(a.dia_hora) >= agora)
+          .sort((a, b) => new Date(a.dia_hora) - new Date(b.dia_hora));
 
         setEventos(eventosOrdenados);
         
