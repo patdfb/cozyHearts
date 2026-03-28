@@ -1,11 +1,8 @@
 import BigButton from '../../components/BigButton'
-import { useNavigate } from 'react-router-dom'
 import { CircleUserRound, Lock, CalendarDays, Smile } from 'lucide-react'
 import Input from '../../components/Input'
 
 function Register() {
-  const navigate = useNavigate()
-
   return (
     <>
       <section id="center" className="grid min-h-dvh w-full place-items-center px-4">

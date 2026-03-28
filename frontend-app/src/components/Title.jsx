@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom"
 import { ArrowLeft } from 'lucide-react'
 
-export default function Title({ name }) {
+export default function Title({ name, path=null}) {
 
     const navigate = useNavigate()
-    const handleGoBack = () => navigate('/main')
+    const handleGoBack = () => {
+        navigate(path ?? '/main')
+    }
 
     return(
 
@@ -15,7 +17,7 @@ export default function Title({ name }) {
             aria-label="Voltar"
             className="cursor-pointer"
             >
-                <ArrowLeft size={25} className='text-black'/>
+                <ArrowLeft size={35} className='text-black'/>
             </button>
             <p className="text-black text-2xl font-bold">
                 {name} 
