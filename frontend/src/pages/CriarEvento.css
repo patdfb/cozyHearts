@@ -167,3 +167,52 @@
   background-color: #0d4654;
   transform: translateY(-2px);
 }
+
+/* Seletor de Interesse */
+.form-select {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0 15px;
+  height: 55px;
+  outline: none;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  appearance: none; /* Remove seta padrão para estilo customizado */
+}
+
+.interesse-container {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.btn-add-interesse, .btn-cancel-interesse {
+  background-color: #105666;
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.btn-add-interesse:hover {
+  transform: scale(1.1);
+  background-color: #0d4654;
+}
+
+.novo-interesse-group input {
+  padding-right: 5px;
+}
+
+.btn-cancel-interesse {
+  background-color: #666;
+  width: 30px;
+  height: 30px;
+}

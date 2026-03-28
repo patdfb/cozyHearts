@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { eventService } from '../services/api';
 import MainLayout from '../components/template/MainLayout';
-import { ArrowLeft, ClipboardList, Calendar, MapPin, Upload, Check, AlignLeft, Clock } from 'lucide-react';
+import { ArrowLeft, ClipboardList, Calendar, MapPin, Upload, Check, AlignLeft, Clock, Star, Plus } from 'lucide-react';
 import './CriarEvento.css';
 
 const EditarEvento = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [interessesExistentes, setInteressesExistentes] = useState([]);
+  const [mostrarNovoInteresse, setMostrarNovoInteresse] = useState(false);
   const [formData, setFormData] = useState({
     titulo: '',
     dataDisplay: '',
@@ -17,10 +19,31 @@ const EditarEvento = () => {
     freguesia: '',
     cidade: '',
     descricao: '',
+    id_interesse: '',
+    novo_interesse: '',
     imagemFile: null,
     imagemUrl: ''
   });
   const [fileName, setFileName] = useState('Alterar Imagem (PNG, JPG)');
+
+  // Buscar lista de interesses ao carregar a página
+  useEffect(() => {
+    const fetchInteresses = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/interesses');
+        if (!response.ok) {
+          throw new Error('Falha ao buscar interesses do servidor');
+        }
+        const data = await response.json();
+        setInteressesExistentes(data);
+      } catch (err) {
+        console.error('Erro no frontend ao carregar interesses:', err);
+        setInteressesExistentes([]);
+      }
+    };
+    
+    fetchInteresses();
+  }, []);
 
   useEffect(() => {
     const fetchEvento = async () => {
@@ -46,6 +69,8 @@ const EditarEvento = () => {
           freguesia: (ev.Localidade && (ev.Localidade.Freguesia || ev.Localidade.freguesia)) || ev.freguesia || '',
           cidade: (ev.Localidade && (ev.Localidade.Cidade || ev.Localidade.cidade)) || ev.cidade || '',
           descricao: ev.Descricao || ev.descricao || '',
+          id_interesse: ev.id_interesse || '',
+          novo_interesse: '',
           imagemFile: null,
           imagemUrl: ev.Image || ev.imagem || ''
         });
@@ -76,6 +101,14 @@ const EditarEvento = () => {
       data.append('endereco', formData.morada);
       data.append('freguesia', formData.freguesia);
       data.append('cidade', formData.cidade);
+      
+      // Lógica de Interesse: Envia ID ou o nome do novo
+      if (mostrarNovoInteresse) {
+        data.append('interesse_nome', formData.novo_interesse);
+      } else {
+        data.append('id_interesse', formData.id_interesse);
+      }
+      
       if (formData.dataDisplay && formData.horaDisplay) {
         const [dia, mes, ano] = formData.dataDisplay.split('/');
         const [hora, minuto] = formData.horaDisplay.split(':');
@@ -116,6 +149,55 @@ const EditarEvento = () => {
                 onChange={e => setFormData({ ...formData, titulo: e.target.value })}
                 required
               />
+            </div>
+
+            {/* SEÇÃO DE INTERESSE */}
+            <div className="interesse-container">
+              {!mostrarNovoInteresse ? (
+                <div className="form-input-group">
+                  <div className="icon-box"><Star size={22} /></div>
+                  <select
+                    className="form-select"
+                    value={formData.id_interesse}
+                    onChange={(e) => setFormData({ ...formData, id_interesse: e.target.value })}
+                    required={!mostrarNovoInteresse}
+                  >
+                    <option value="">Selecionar Categoria/Interesse</option>
+                    {interessesExistentes.map(int => (
+                      <option key={int.id} value={int.id}>{int.Nome}</option>
+                    ))}
+                  </select>
+                  <button 
+                    type="button" 
+                    className="btn-add-interesse" 
+                    onClick={() => setMostrarNovoInteresse(true)}
+                    title="Adicionar novo interesse"
+                  >
+                    <Plus size={20} />
+                  </button>
+                </div>
+              ) : (
+                <div className="form-input-group novo-interesse-group">
+                  <div className="icon-box"><Plus size={22} /></div>
+                  <input
+                    type="text"
+                    placeholder="Nome da Nova Categoria"
+                    value={formData.novo_interesse}
+                    onChange={(e) => setFormData({ ...formData, novo_interesse: e.target.value })}
+                    required={mostrarNovoInteresse}
+                  />
+                  <button 
+                    type="button" 
+                    className="btn-cancel-interesse" 
+                    onClick={() => {
+                        setMostrarNovoInteresse(false);
+                        setFormData({...formData, novo_interesse: ''});
+                    }}
+                  >
+                    <ArrowLeft size={18} />
+                  </button>
+                </div>
+              )}
             </div>
             <div className="form-row">
               <div className="form-input-group">

@@ -40,40 +40,83 @@ const EditarPerfil = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUserData({ ...userData, foto: reader.result }); // Base64 para preview
-        setUserData(prev => ({ ...prev, fotoFile: file })); // Guardar ficheiro real para upload
+        // Atualiza SIMULTANEAMENTE foto (para preview) e fotoFile (para upload)
+        setUserData(prev => ({ 
+          ...prev, 
+          foto: reader.result,  // Base64 para preview
+          fotoFile: file        // Ficheiro real para upload
+        }));
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleSave = async (e) => {
-  e.preventDefault();
-  try {
-    const token = localStorage.getItem('supabase_token');
-    const formData = new FormData();
+    e.preventDefault();
+    try {
+      // Validação: certifica-se que tem pelo menos um campo para atualizar
+      const temAlteracoes = userData.nome || userData.telefone || userData.nascimento || userData.fotoFile;
+      
+      if (!temAlteracoes) {
+        alert('Por favor, faça alguma alteração antes de guardar.');
+        return;
+      }
 
-    // CRUCIAL: Usa nomes em minúsculas para o req.body ler facilmente
-    formData.append('nome', userData.nome);
-    formData.append('telefone', userData.telefone);
-    formData.append('nascimento', userData.nascimento);
-    
-    if (userData.fotoFile) {
-      formData.append('image', userData.fotoFile);
+      const formData = new FormData();
+
+      // CRUCIAL: Envia APENAS valores que não estão vazios
+      if (userData.nome?.trim()) {
+        formData.append('nome', userData.nome.trim());
+      }
+      if (userData.telefone?.trim()) {
+        formData.append('telefone', userData.telefone.trim());
+      }
+      if (userData.nascimento?.trim()) {
+        formData.append('nascimento', userData.nascimento.trim());
+      }
+      if (userData.fotoFile) {
+        formData.append('image', userData.fotoFile);
+      }
+
+      console.log('Enviando FormData com:', { 
+        nome: userData.nome, 
+        telefone: userData.telefone, 
+        nascimento: userData.nascimento, 
+        temFoto: !!userData.fotoFile 
+      });
+
+      // Envia para o serviço
+      const updatedUser = await authService.updatePerfil(formData);
+      
+      console.log('Resposta do servidor:', updatedUser);
+      
+      // Valida resposta
+      if (!updatedUser || !updatedUser.id) {
+        throw new Error('Resposta do servidor inválida');
+      }
+      
+      // Atualiza o localStorage com o membro completo retornado
+      localStorage.setItem('user_data', JSON.stringify(updatedUser));
+      
+      // Atualiza o estado local também para mostrar na página
+      setUserData({
+        id: updatedUser.id,
+        nome: updatedUser.Nome || '',
+        instituicao: updatedUser.Instituicao?.Nome || '',
+        email: updatedUser.Email || '',
+        telefone: updatedUser.Telemovel || '',
+        nascimento: updatedUser.Data_de_Nascimento || '',
+        foto: updatedUser.Image || null,
+        fotoFile: null
+      });
+      
+      alert("Perfil atualizado com sucesso!");
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Erro completo:', error);
+      alert('Erro ao atualizar: ' + error.message);
     }
-
-    // Envia para o serviço
-    const updatedUser = await authService.updatePerfil(formData);
-    
-    // Atualiza o Browser (LocalStorage) com o que o Supabase devolveu
-    localStorage.setItem('user_data', JSON.stringify(updatedUser));
-    
-    alert("Perfil atualizado com sucesso!");
-    navigate('/dashboard');
-  } catch (error) {
-    alert('Erro ao atualizar: ' + error.message);
-  }
-};
+  };
   return (
     <MainLayout>
       <div className="edit-profile-page">

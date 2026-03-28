@@ -1,25 +1,53 @@
 import express from 'express';
-import { supabase } from '../lib/supabase.js';
+import { supabase, supabaseAdmin } from '../lib/supabase.js';
+import upload from '../lib/storage.js';
 
 const router = express.Router();
 
 // Middleware para verificar se o membro existe e está verificado
 async function requireVerifiedMembro(req, res, next) {
   const authHeader = req.headers['authorization'];
-  if (!authHeader) return res.status(401).json({ error: 'Missing authorization header' });
+  if (!authHeader) {
+    console.log('✗ Falta authorization header');
+    return res.status(401).json({ error: 'Missing authorization header' });
+  }
 
   const token = authHeader.replace('Bearer ', '');
+  console.log('Verificando token...');
+  
   const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-  if (authError || !user) return res.status(401).json({ error: 'Invalid or expired token' });
+  if (authError || !user) {
+    console.log('✗ Token inválido:', authError?.message || 'sem user');
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+
+  console.log('User autenticado:', user.email);
 
   const { data: membro, error } = await supabase
     .from('Membro')
-    .select('*, Instituicao(*)')
+    .select('*')
     .eq('Email', user.email)
     .single();
 
-  if (error || !membro) return res.status(404).json({ error: 'Membro not found' });
-  
+  if (error || !membro) {
+    console.log('✗ Membro não encontrado:', error?.message);
+    return res.status(404).json({ error: 'Membro not found' });
+  }
+
+  // Agora busca a instituição separadamente só se houver id_Instituicao
+  if (membro.id_Instituicao) {
+    const { data: instituicao } = await supabase
+      .from('Instituicao')
+      .select('*')
+      .eq('id', membro.id_Instituicao)
+      .single();
+    
+    membro.Instituicao = instituicao || null;
+  } else {
+    membro.Instituicao = null;
+  }
+
+  console.log('✓ Membro autenticado:', membro.Email, 'com instituição:', membro.Instituicao?.Nome);
   req.membro = membro;
   next();
 }
@@ -35,11 +63,25 @@ router.get('/me', async (req, res) => {
 
   const { data: membro, error } = await supabase
     .from('Membro')
-    .select('*, Instituicao(*)')
+    .select('*')
     .eq('Email', user.email)
     .single();
 
   if (error || !membro) return res.status(404).json({ error: 'Membro not found' });
+  
+  // Busca instituição separadamente se existir
+  if (membro.id_Instituicao) {
+    const { data: instituicao } = await supabase
+      .from('Instituicao')
+      .select('*')
+      .eq('id', membro.id_Instituicao)
+      .single();
+    
+    membro.Instituicao = instituicao || null;
+  } else {
+    membro.Instituicao = null;
+  }
+  
   res.json(membro);
 });
 
@@ -72,37 +114,88 @@ router.post('/invite', requireVerifiedMembro, async (req, res) => {
 
 
 // Atualizar dados do próprio membro logado
-import upload from '../lib/storage.js';
 router.put('/me', requireVerifiedMembro, upload.single('image'), async (req, res) => {
-  // 1. Verifica no terminal do VS Code se isto aparece:
-  console.log('Dados recebidos:', req.body); 
+  console.log('=== PUT /membros/me ===');
+  console.log('User email:', req.membro.Email);
+  console.log('Dados do corpo:', req.body);
+  console.log('Tem ficheiro?', !!req.file);
 
   const updates = {};
 
   // Mapeamento manual para garantir que os valores do req.body vão para as colunas do Supabase
-  if (req.body.nome) updates.Nome = req.body.nome;
-  if (req.body.telefone) updates.Telemovel = req.body.telefone;
-  if (req.body.nascimento) updates.Data_de_Nascimento = req.body.nascimento;
+  if (req.body.nome && req.body.nome.trim()) {
+    updates.Nome = req.body.nome.trim();
+    console.log('✓ Nome será atualizado:', updates.Nome);
+  }
+  if (req.body.telefone && req.body.telefone.trim()) {
+    updates.Telemovel = req.body.telefone.trim();
+    console.log('✓ Telefone será atualizado:', updates.Telemovel);
+  }
+  if (req.body.nascimento && req.body.nascimento.trim()) {
+    updates.Data_de_Nascimento = req.body.nascimento.trim();
+    console.log('✓ Nascimento será atualizado:', updates.Data_de_Nascimento);
+  }
 
+  // Upload da imagem se houver ficheiro
   if (req.file) {
-    // ... lógica de upload para o storage que já tens no membros.js ...
-    // updates.Image = imageUrl;
+    try {
+      const fileName = `${Date.now()}-${req.file.originalname}`;
+      console.log('A fazer upload da imagem:', fileName);
+      
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from('Images')
+        .upload(fileName, req.file.buffer, { contentType: req.file.mimetype });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabaseAdmin.storage
+        .from('Images')
+        .getPublicUrl(fileName);
+
+      updates.Image = urlData.publicUrl;
+      console.log('✓ Imagem enviada:', updates.Image);
+    } catch (err) {
+      console.error('✗ Erro ao fazer upload:', err.message);
+      return res.status(500).json({ error: 'Erro ao fazer upload da imagem: ' + err.message });
+    }
   }
 
-  // 2. Só executa se houver dados
+  console.log('Total de campos a atualizar:', Object.keys(updates).length);
+
+  // Só executa se houver dados
   if (Object.keys(updates).length === 0) {
-    return res.status(400).json({ error: 'Nenhum dado enviado corretamente' });
+    console.log('✗ Nenhum dado a atualizar');
+    return res.status(400).json({ error: 'Nenhum dado enviado para atualizar' });
   }
+
+  console.log('Atualizando Supabase com:', updates);
 
   const { data, error } = await supabase
     .from('Membro')
     .update(updates)
     .eq('id', req.membro.id)
-    .select('*, Instituicao(*)')
+    .select()
     .single();
 
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) {
+    console.error('✗ Erro ao atualizar na BD:', error.message);
+    return res.status(500).json({ error: 'Erro ao atualizar: ' + error.message });
+  }
 
+  // Busca instituição separadamente se existir
+  if (data.id_Instituicao) {
+    const { data: instituicao } = await supabase
+      .from('Instituicao')
+      .select('*')
+      .eq('id', data.id_Instituicao)
+      .single();
+    
+    data.Instituicao = instituicao || null;
+  } else {
+    data.Instituicao = null;
+  }
+
+  console.log('✓ Membro atualizado com sucesso:', data);
   res.json(data);
 });
 
