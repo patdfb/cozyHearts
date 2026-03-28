@@ -1,0 +1,112 @@
+CREATE TABLE public.Atividade (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  Nome character varying,
+  Descricao character varying,
+  dia_hora timestamp without time zone,
+  id_interesse bigint,
+  Endereco character varying,
+  id_localidade bigint,
+  Image text,
+  CONSTRAINT Atividade_pkey PRIMARY KEY (id),
+  CONSTRAINT Atividade_id_interesse_fkey FOREIGN KEY (id_interesse) REFERENCES public.Interesse(id),
+  CONSTRAINT Atividade_id_localidade_fkey FOREIGN KEY (id_localidade) REFERENCES public.Localidade(id)
+);
+CREATE TABLE public.Codigo (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  codigo character varying,
+  hora timestamp without time zone,
+  id_Usuario bigint,
+  CONSTRAINT Codigo_pkey PRIMARY KEY (id),
+  CONSTRAINT Codigo_id_Usuario_fkey FOREIGN KEY (id_Usuario) REFERENCES public.Usuario(id)
+);
+CREATE TABLE public.Familiar (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  Email character varying,
+  Data_de_Nascimento date NOT NULL,
+  Nome character varying,
+  telemovel character varying,
+  Image text,
+  CONSTRAINT Familiar_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.Grupo (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  Nome character varying,
+  Id_Participante bigint,
+  Id_Interesse bigint,
+  Localidade bigint,
+  CONSTRAINT Grupo_pkey PRIMARY KEY (id),
+  CONSTRAINT Grupo_Id_Interesse_fkey FOREIGN KEY (Id_Interesse) REFERENCES public.Interesse(id),
+  CONSTRAINT Grupo_Localidade_fkey FOREIGN KEY (Localidade) REFERENCES public.Localidade(id)
+);
+CREATE TABLE public.Instituicao (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  Nome character varying,
+  id_localidade bigint,
+  Endereco character varying,
+  Verificacao boolean DEFAULT false,
+  CONSTRAINT Instituicao_pkey PRIMARY KEY (id),
+  CONSTRAINT Instituicao_id_localidade_fkey FOREIGN KEY (id_localidade) REFERENCES public.Localidade(id)
+);
+CREATE TABLE public.Interesse (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  Nome character varying,
+  Descricao character varying,
+  CONSTRAINT Interesse_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.Localidade (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  Freguesia character varying,
+  Cidade character varying,
+  CONSTRAINT Localidade_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.Membro (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  id_Instituicao bigint,
+  Email character varying,
+  Nome character varying,
+  Data_de_Nascimento date,
+  Image text,
+  CONSTRAINT Membro_pkey PRIMARY KEY (id),
+  CONSTRAINT Membro_id_Instituicao_fkey FOREIGN KEY (id_Instituicao) REFERENCES public.Instituicao(id)
+);
+CREATE TABLE public.Mensagem (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  Conteudo character varying,
+  Hora timestamp without time zone,
+  Id_Familiar bigint,
+  Id_Usuario bigint,
+  Id_Membro bigint,
+  CONSTRAINT Mensagem_pkey PRIMARY KEY (id),
+  CONSTRAINT Mensagem_Id_Familiar_fkey FOREIGN KEY (Id_Familiar) REFERENCES public.Familiar(id),
+  CONSTRAINT Mensagem_Id_Usuario_fkey FOREIGN KEY (Id_Usuario) REFERENCES public.Usuario(id),
+  CONSTRAINT Mensagem_Id_Membro_fkey FOREIGN KEY (Id_Membro) REFERENCES public.Membro(id)
+);
+CREATE TABLE public.Participante (
+  Id_Atividade bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  Id_Usuario bigint,
+  Id_Membro bigint,
+  Organizador boolean,
+  CONSTRAINT Participante_pkey PRIMARY KEY (Id_Atividade),
+  CONSTRAINT Participante_Id_Usuario_fkey FOREIGN KEY (Id_Usuario) REFERENCES public.Usuario(id),
+  CONSTRAINT Participante_Id_Atividade_fkey FOREIGN KEY (Id_Atividade) REFERENCES public.Atividade(id),
+  CONSTRAINT Participante_Id_Membro_fkey FOREIGN KEY (Id_Membro) REFERENCES public.Membro(id)
+);
+CREATE TABLE public.Usuario (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  Email character varying NOT NULL,
+  Telemovel character varying,
+  Nome character varying,
+  Data_de_Nascimento date,
+  Localidade character varying,
+  Id_Familiar bigint,
+  Image text,
+  CONSTRAINT Usuario_pkey PRIMARY KEY (id),
+  CONSTRAINT Usuário_Id_Familiar_fkey FOREIGN KEY (Id_Familiar) REFERENCES public.Familiar(id)
+);
+CREATE TABLE public.Usuario_Interesse (
+  id_Interesse bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  id_Usuario bigint NOT NULL,
+  CONSTRAINT Usuario_Interesse_pkey PRIMARY KEY (id_Interesse, id_Usuario),
+  CONSTRAINT Usuario_Interesse_id_Interesse_fkey FOREIGN KEY (id_Interesse) REFERENCES public.Interesse(id),
+  CONSTRAINT Usuario_Interesse_id_Usuario_fkey FOREIGN KEY (id_Usuario) REFERENCES public.Usuario(id)
+);

@@ -1,0 +1,22 @@
+{
+  "name": "cozy-hearts-backend",
+  "version": "1.0.0",
+  "description": "Backend API para Cozy Hearts",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.100.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^4.21.1",
+    "multer": "^2.1.1"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
