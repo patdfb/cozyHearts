@@ -1,0 +1,20 @@
+{
+  "version": "53.0.0",
+  "files": {
+    "42a62eb5fe868afccfc501d6069a28f4dcf89d6ea781e70f897e8600ec04f461": {
+      "displayName": "amplify-cozyheartsbackend-felipe-sandbox-30ca433860 Template",
+      "source": {
+        "path": "amplify-cozyheartsbackend-felipe-sandbox-30ca433860.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-14b96ec5": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "42a62eb5fe868afccfc501d6069a28f4dcf89d6ea781e70f897e8600ec04f461.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}
