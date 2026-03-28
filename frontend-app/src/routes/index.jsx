@@ -7,8 +7,10 @@ import RegisterFam from '../pages/Register/RegisterFam'
 import Main from '../pages/Main'
 import MyGroups from '../pages/GroupsAndEvents/MyGroups'
 import MyEvents from '../pages/GroupsAndEvents/MyEvents'
+import EventDetails from '../pages/GroupsAndEvents/EventDetails'
 import EventsNearMe from '../pages/EventsNearMe'
-
+import MyInterests from '../pages/Interests/MyInterests'
+import OtherInterests from '../pages/Interests/OtherInterests'
 
 const router = createBrowserRouter([
   {
@@ -44,8 +46,20 @@ const router = createBrowserRouter([
     element: <MyEvents />,
   },
   {
+    path: '/eventDetails',
+    element: <EventDetails />,
+  },
+  {
     path: '/eventsNearMe',
     element: <EventsNearMe />,
+  },
+  {
+    path: '/myInterests',
+    element: <MyInterests />,
+  },
+  {
+    path: '/otherInterests',
+    element: <OtherInterests />,
   },
   {
     path: '*',
