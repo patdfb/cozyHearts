@@ -9,10 +9,28 @@ router.post('/register', upload.single('image'), async (req, res) => {
   try {
     const { email, password, nome, data_de_nascimento, telemovel } = req.body
 
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    if (!password || password.trim() === '') {
+      return res.status(400).json({ error: 'Password is required.' })
+    }
+
+    if (!nome || nome.trim() === '') {
+      return res.status(400).json({ error: 'Name is required.' })
+    }
+
+    if (!data_de_nascimento || data_de_nascimento.trim() === '') {
+      return res.status(400).json({ error: 'Birth date is required.' })
+    }
+
+    const { data: authData, error: authError } =
+    await supabaseAdmin.auth.admin.createUser({
       email,
-      password
+      password,
+      email_confirm: true,
+      nome_confirm: true,
+      password_confirm: true,
+      data_de_nascimento: true
     })
+
 
     if (authError) return res.status(400).json({ error: authError.message })
 
