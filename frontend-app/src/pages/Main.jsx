@@ -46,7 +46,7 @@ function Main() {
         }
 
         // O backend resolve o usuario usando o email do token e procura na tabela Usuario
-        const response = await fetch('http://localhost:3000/usuarios/profile', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/usuarios/profile`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${authData.token}`,

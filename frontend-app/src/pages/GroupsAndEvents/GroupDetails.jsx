@@ -22,7 +22,7 @@ function GroupDetails() {
         }
 
         // Fetch group details and members
-        const res = await fetch(`http://localhost:3000/grupos/${id}/members`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/grupos/${id}/members`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${authData.token}`,
