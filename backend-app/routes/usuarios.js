@@ -67,15 +67,22 @@ router.get('/activities', requireUsuario, async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('Participante')
-      .select('*, Atividade(*, Interesse(*), Localidade(*))')
+      .select('*, Atividade(*, Interesse(*), Localidade(*), Participante(*, Usuario(*)))')
       .eq('Id_Usuario', req.usuario.id)
 
     if (error) return res.status(500).json({ error: error.message })
 
-    res.json(data.map(p => ({
-      ...p.Atividade,
-      isOrganizador: p.Organizador
-    })))
+    // Find the organizer for each activity
+    const activitiesWithOrganizer = data.map(p => {
+      const organizador = p.Atividade.Participante?.find(part => part.Organizador)
+      return {
+        ...p.Atividade,
+        isOrganizador: p.Organizador,
+        nomeOrganizador: organizador?.Usuario?.Nome || 'Desconhecido'
+      }
+    })
+
+    res.json(activitiesWithOrganizer)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }

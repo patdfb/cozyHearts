@@ -6,7 +6,9 @@ export default function EventCard({
   organizer,
   canceledReason = null,
   onClick,
-  subscribe=false,
+  subscribe = false,
+  onSubscribe,
+  onCancelSubscription,
 }) {
   return (
     <article className="w-full py-4">
@@ -53,7 +55,7 @@ export default function EventCard({
             {subscribe ? (
               <button
                 className="h-9 w-full rounded-4xl bg-button text-sm font-bold text-white"
-                onClick={() => {}}
+                onClick={onSubscribe}
                 type="button"
               >
                 Inscrever
@@ -61,7 +63,7 @@ export default function EventCard({
             ) : (
               <button
                 className="h-9 w-full rounded-4xl bg-error text-sm font-bold text-white"
-                onClick={() => {}}
+                onClick={onCancelSubscription}
                 type="button"
               >
                 Cancelar Inscrição

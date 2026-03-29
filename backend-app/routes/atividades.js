@@ -183,7 +183,15 @@ router.post('/:id/join', requireUsuario, async (req, res) => {
         Organizador: false
       })
 
-    if (error) return res.status(500).json({ error: error.message })
+    if (error) {
+      // 23505 = unique_violation in Postgres
+      if (error.code === '23505') {
+        return res.status(409).json({
+          error: 'Nao foi possivel inscrever: conflito de chave unica na tabela Participante.'
+        })
+      }
+      return res.status(500).json({ error: error.message })
+    }
 
     res.json({ message: 'Joined activity successfully.' })
   } catch (error) {
