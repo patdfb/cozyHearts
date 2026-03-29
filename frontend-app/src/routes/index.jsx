@@ -5,6 +5,7 @@ import Register from '../pages/Register/Register'
 import RegisterChoice from '../pages/Register/RegisterChoice'
 import RegisterFam from '../pages/Register/RegisterFam'
 import Main from '../pages/Main'
+import Profile from '../pages/Profile'
 import MyGroups from '../pages/GroupsAndEvents/MyGroups'
 import MyEvents from '../pages/GroupsAndEvents/MyEvents'
 import EventDetails from '../pages/GroupsAndEvents/EventDetails'
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: '/main',
     element: <Main />,
+  },
+  {
+    path: '/profile',
+    element: <Profile />,
   },
   {
     path: '/myGroups',

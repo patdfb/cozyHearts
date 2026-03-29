@@ -1,4 +1,4 @@
-import { CircleUserRound, Lock } from 'lucide-react'
+import { CircleUserRound } from 'lucide-react'
 
 import { useNavigate } from 'react-router-dom'
 
