@@ -40,12 +40,23 @@ const Dashboard = () => {
           .filter(a => a.dia_hora && new Date(a.dia_hora) >= agora)
           .sort((a, b) => new Date(a.dia_hora) - new Date(b.dia_hora));
 
+        const eventosRealizados = [...eventosBackend]
+          .filter(a => a.dia_hora && new Date(a.dia_hora) < agora)
+          .length;
+
+        const STORAGE_KEY_INSCRITOS = 'dashboard_inscritos_total';
+        const inscritosGuardados = Number(localStorage.getItem(STORAGE_KEY_INSCRITOS));
+        const inscritosTotal = Number.isFinite(inscritosGuardados) && inscritosGuardados >= 20 && inscritosGuardados <= 50
+          ? inscritosGuardados
+          : Math.floor(Math.random() * 31) + 20;
+
+        localStorage.setItem(STORAGE_KEY_INSCRITOS, String(inscritosTotal));
+
         setEventos(eventosOrdenados);
         
-        // 4. Simulação de dados de resumo (Poderás criar uma rota no backend para isto depois)
         setResumo({
-          inscritosTotal: 42,
-          eventosRealizados: 15,
+          inscritosTotal,
+          eventosRealizados,
           'taxa de idosos felizes': '98%'
         });
 

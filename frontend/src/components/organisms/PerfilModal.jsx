@@ -82,6 +82,7 @@ const PerfilModal = ({ isOpen, onClose }) => { // Removemos o instituicaoNome da
   const handleLogout = () => {
   localStorage.removeItem('supabase_token');
   localStorage.removeItem('user_data');
+  localStorage.removeItem('dashboard_inscritos_total');
   navigate('/');
   onClose();
   };
@@ -163,7 +164,7 @@ const PerfilModal = ({ isOpen, onClose }) => { // Removemos o instituicaoNome da
               {saving ? 'A guardar...' : 'Guardar'}
             </button>
           ) : (
-            <button className="perfil-main-btn logout" onClick={() => { navigate('/'); onClose(); }}>
+            <button className="perfil-main-btn logout" onClick={handleLogout}>
               Terminar Sessão
             </button>
           )}
