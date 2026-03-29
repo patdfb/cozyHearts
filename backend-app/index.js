@@ -11,8 +11,34 @@ dotenv.config()
 
 const app = express()
 
+const staticAllowedOrigins = [
+  'https://www.cozyhearts.pt',
+  'https://cozyhearts.pt',
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:3000'
+]
+
+const envAllowedOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean)
+
+const allowedOrigins = new Set([...staticAllowedOrigins, ...envAllowedOrigins])
+const allowedRegex = [
+  /^https:\/\/[a-z0-9-]+\.amplifyapp\.com$/i,
+  /^https:\/\/[a-z0-9.-]*cozyhearts\.pt$/i
+]
+
 app.use(cors({
-  origin: ['https://www.cozyhearts.pt', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'],
+  origin: (origin, callback) => {
+    // Allow non-browser clients and same-origin calls without Origin header.
+    if (!origin) return callback(null, true)
+    if (allowedOrigins.has(origin) || allowedRegex.some((re) => re.test(origin))) {
+      return callback(null, true)
+    }
+    return callback(new Error('Not allowed by CORS'))
+  },
   credentials: true
 }))
 app.use(express.json())
