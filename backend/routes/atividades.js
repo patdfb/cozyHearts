@@ -3,6 +3,20 @@ const router = express.Router();
 import { supabase, supabaseAdmin } from '../lib/supabase.js';
 import upload from '../lib/storage.js';
 
+function parseInteresseInput(rawInput, fallbackDescricao = null) {
+  const valor = (rawInput || '').trim();
+  if (!valor) {
+    return { nome: '', descricao: fallbackDescricao };
+  }
+
+  const partes = valor.split('-');
+  const nome = (partes.shift() || '').trim();
+  const descricaoDerivada = partes.join('-').trim();
+  const descricao = descricaoDerivada || (fallbackDescricao || null);
+
+  return { nome, descricao };
+}
+
 async function requireMembro(req, res, next) {
   const authHeader = req.headers['authorization']
   if (!authHeader) return res.status(401).json({ error: 'Missing authorization header' })
@@ -77,7 +91,7 @@ router.get('/:id', requireMembro, async (req, res) => {
 
 // Create activity with optional image
 router.post('/', requireMembro, upload.single('image'), async (req, res) => {
-  const { nome, descricao, dia_hora, id_interesse, interesse_nome, interesse_descricao, endereco, freguesia, cidade } = req.body
+  const { nome, descricao, dia_hora, id_interesse, interesse_nome, interesse_descricao, endereco, freguesia, cidade, remove_image } = req.body
 
   let localidadeId
   const { data: existingLocs } = await supabase
@@ -101,10 +115,16 @@ router.post('/', requireMembro, upload.single('image'), async (req, res) => {
 
   let interesseId = id_interesse
   if (interesse_nome) {
+    const { nome: nomeInteresse, descricao: descricaoInteresse } = parseInteresseInput(interesse_nome, interesse_descricao);
+
+    if (!nomeInteresse) {
+      return res.status(400).json({ error: 'Nome da categoria/interesse inválido' });
+    }
+
     const { data: existingInts } = await supabase
       .from('Interesse')
       .select('id')
-      .eq('Nome', interesse_nome)
+      .eq('Nome', nomeInteresse)
       .limit(1)
 
     if (existingInts && existingInts.length > 0) {
@@ -112,7 +132,7 @@ router.post('/', requireMembro, upload.single('image'), async (req, res) => {
     } else {
       const { data: newInt, error: intError } = await supabase
         .from('Interesse')
-        .insert({ Nome: interesse_nome, Descricao: interesse_descricao })
+        .insert({ Nome: nomeInteresse, Descricao: descricaoInteresse })
         .select()
         .single()
       if (intError) return res.status(500).json({ error: intError.message })
@@ -177,9 +197,35 @@ router.put('/:id', requireMembro, upload.single('image'), async (req, res) => {
     .eq('Organizador', true)
     .single()
 
-  if (partError || !part) return res.status(403).json({ error: 'Not authorized to edit this activity' })
+  let autorizado = !partError && !!part
 
-  const { nome, descricao, dia_hora, id_interesse, interesse_nome, interesse_descricao, endereco, freguesia, cidade } = req.body
+  if (!autorizado) {
+    const { data: organizadores, error: orgError } = await supabase
+      .from('Participante')
+      .select('Id_Membro')
+      .eq('Id_Atividade', req.params.id)
+      .eq('Organizador', true)
+
+    if (orgError || !organizadores || organizadores.length === 0) {
+      return res.status(403).json({ error: 'Not authorized to edit this activity' })
+    }
+
+    const idsOrganizadores = organizadores.map((o) => o.Id_Membro)
+    const { data: membrosOrg, error: membrosOrgError } = await supabase
+      .from('Membro')
+      .select('id, id_Instituicao')
+      .in('id', idsOrganizadores)
+
+    if (membrosOrgError || !membrosOrg || membrosOrg.length === 0) {
+      return res.status(403).json({ error: 'Not authorized to edit this activity' })
+    }
+
+    autorizado = membrosOrg.some((m) => m.id_Instituicao === req.membro.id_Instituicao)
+  }
+
+  if (!autorizado) return res.status(403).json({ error: 'Not authorized to edit this activity' })
+
+  const { nome, descricao, dia_hora, id_interesse, interesse_nome, interesse_descricao, endereco, freguesia, cidade, remove_image } = req.body
 
   const { data: existing, error: existingError } = await supabase
     .from('Atividade')
@@ -215,10 +261,16 @@ router.put('/:id', requireMembro, upload.single('image'), async (req, res) => {
   if (id_interesse) {
     finalInteresseId = id_interesse
   } else if (interesse_nome) {
+    const { nome: nomeInteresse, descricao: descricaoInteresse } = parseInteresseInput(interesse_nome, interesse_descricao);
+
+    if (!nomeInteresse) {
+      return res.status(400).json({ error: 'Nome da categoria/interesse inválido' });
+    }
+
     const { data: existingInts } = await supabase
       .from('Interesse')
       .select('id')
-      .eq('Nome', interesse_nome)
+      .eq('Nome', nomeInteresse)
       .limit(1)
 
     if (existingInts && existingInts.length > 0) {
@@ -226,7 +278,7 @@ router.put('/:id', requireMembro, upload.single('image'), async (req, res) => {
     } else {
       const { data: newInt, error: intError } = await supabase
         .from('Interesse')
-        .insert({ Nome: interesse_nome, Descricao: interesse_descricao })
+        .insert({ Nome: nomeInteresse, Descricao: descricaoInteresse })
         .select()
         .single()
       if (intError) return res.status(500).json({ error: intError.message })
@@ -235,6 +287,13 @@ router.put('/:id', requireMembro, upload.single('image'), async (req, res) => {
   }
 
   let imageUrl = existing.Image
+
+  const removeImageFlag = ['true', '1', 'on', 'yes']
+    .includes(String(remove_image || '').trim().toLowerCase())
+
+  if (removeImageFlag) {
+    imageUrl = null
+  }
 
   if (req.file) {
     const fileName = `${Date.now()}-${req.file.originalname}`
@@ -251,13 +310,38 @@ router.put('/:id', requireMembro, upload.single('image'), async (req, res) => {
     imageUrl = urlData.publicUrl
   }
 
+  const updates = {
+    Nome: nome,
+    Descricao: descricao,
+    dia_hora,
+    id_interesse: finalInteresseId,
+    Endereco: endereco,
+    id_localidade,
+    Image: imageUrl
+  }
+
   const { data, error } = await supabase
     .from('Atividade')
-    .update({ Nome: nome, Descricao: descricao, dia_hora, id_interesse: finalInteresseId, Endereco: endereco, id_localidade, Image: imageUrl })
+    .update(updates)
     .eq('id', req.params.id)
-    .select()
+    .select('*')
+    .single()
 
   if (error) return res.status(500).json({ error: error.message })
+
+  // Garantia extra: se pediu remoção, assegura que a coluna Image fica null.
+  if (removeImageFlag && data?.Image !== null) {
+    const { data: forcedData, error: forcedError } = await supabase
+      .from('Atividade')
+      .update({ Image: null })
+      .eq('id', req.params.id)
+      .select('*')
+      .single()
+
+    if (forcedError) return res.status(500).json({ error: forcedError.message })
+    return res.json(forcedData)
+  }
+
   res.json(data)
 })
 
@@ -271,7 +355,33 @@ router.delete('/:id', requireMembro, async (req, res) => {
     .eq('Organizador', true)
     .single()
 
-  if (partError || !part) return res.status(403).json({ error: 'Not authorized to delete this activity' })
+  let autorizado = !partError && !!part
+
+  if (!autorizado) {
+    const { data: organizadores, error: orgError } = await supabase
+      .from('Participante')
+      .select('Id_Membro')
+      .eq('Id_Atividade', req.params.id)
+      .eq('Organizador', true)
+
+    if (orgError || !organizadores || organizadores.length === 0) {
+      return res.status(403).json({ error: 'Not authorized to delete this activity' })
+    }
+
+    const idsOrganizadores = organizadores.map((o) => o.Id_Membro)
+    const { data: membrosOrg, error: membrosOrgError } = await supabase
+      .from('Membro')
+      .select('id, id_Instituicao')
+      .in('id', idsOrganizadores)
+
+    if (membrosOrgError || !membrosOrg || membrosOrg.length === 0) {
+      return res.status(403).json({ error: 'Not authorized to delete this activity' })
+    }
+
+    autorizado = membrosOrg.some((m) => m.id_Instituicao === req.membro.id_Instituicao)
+  }
+
+  if (!autorizado) return res.status(403).json({ error: 'Not authorized to delete this activity' })
 
   // First delete all participants associated with this activity
   const { error: deleteParticipantsError } = await supabase

@@ -1,0 +1,153 @@
+.evento-detalhe-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 10px 14px 32px;
+}
+
+.evento-detalhe-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.evento-detalhe-header h1 {
+  color: #105666;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.evento-detalhe-back {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(16, 86, 102, 0.12);
+  color: #105666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.evento-detalhe-card {
+  display: grid;
+  grid-template-columns: 1.1fr 1.5fr;
+  gap: 20px;
+  background: linear-gradient(130deg, #f8f4e9 0%, #eef4e5 100%);
+  border: 1px solid #dfe8d0;
+  border-radius: 22px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  padding: 18px;
+}
+
+.evento-detalhe-media img,
+.evento-detalhe-placeholder {
+  width: 100%;
+  min-height: 290px;
+  height: 100%;
+  border-radius: 16px;
+}
+
+.evento-detalhe-media img {
+  object-fit: cover;
+}
+
+.evento-detalhe-placeholder {
+  background: #dce8cb;
+  color: #5f7640;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.evento-detalhe-content h2 {
+  color: #105666;
+  margin: 2px 0 14px;
+  font-size: 1.8rem;
+}
+
+.evento-detalhe-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.evento-campo {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: #ffffff;
+  border: 1px solid #e1e6da;
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: #184451;
+}
+
+.evento-campo small {
+  display: block;
+  font-weight: 700;
+  opacity: 0.85;
+  margin-bottom: 2px;
+}
+
+.evento-campo p {
+  margin: 0;
+  line-height: 1.35;
+}
+
+.evento-campo-full {
+  grid-column: 1 / -1;
+}
+
+.evento-localidade {
+  color: #335d3d;
+  font-size: 0.95rem;
+}
+
+.evento-detalhe-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+}
+
+.evento-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.evento-btn-secondary {
+  background: #dce7ef;
+  color: #124b5a;
+}
+
+.evento-btn-primary {
+  background: #105666;
+  color: #fff;
+}
+
+.evento-detalhe-loading {
+  padding: 28px;
+  color: #105666;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .evento-detalhe-card {
+    grid-template-columns: 1fr;
+  }
+
+  .evento-detalhe-media img,
+  .evento-detalhe-placeholder {
+    min-height: 220px;
+  }
+
+  .evento-detalhe-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -216,3 +216,23 @@
   width: 30px;
   height: 30px;
 }
+
+.btn-remover-imagem {
+  background-color: #D70004;
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-right: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.btn-remover-imagem:hover {
+  transform: scale(1.08);
+  filter: brightness(1.1);
+}

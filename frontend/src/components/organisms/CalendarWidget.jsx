@@ -5,7 +5,7 @@ import Button from '../atoms/Button';
 import { eventService } from '../../services/api'; // Importação direta recomendada
 import './CalendarWidget.css';
 
-const CalendarWidget = ({ onViewFull }) => {
+const CalendarWidget = ({ onViewFull, onEventClick }) => {
   const [viewDate, setViewDate] = useState(new Date());
   const [listaEventos, setListaEventos] = useState([]);
 
@@ -98,6 +98,12 @@ const CalendarWidget = ({ onViewFull }) => {
                   ${!isCurrentMonth ? 'other-month' : ''} 
                   ${shouldPaint ? 'event-day' : ''}`
                 }
+                onClick={() => {
+                  if (shouldPaint && onEventClick) {
+                    onEventClick(events[0]);
+                  }
+                }}
+                title={shouldPaint ? 'Ver detalhes do evento' : ''}
               >
                 {format(day, 'd')}
                 {shouldPaint && <span className="dot-indicator"></span>}

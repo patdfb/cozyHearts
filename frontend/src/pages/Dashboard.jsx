@@ -16,6 +16,10 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  const abrirDetalheEvento = (eventoId) => {
+    navigate(`/dashboard/evento/${eventoId}`);
+  };
+
   useEffect(() => {
     const carregarDadosDoDashboard = async () => {
       try {
@@ -58,8 +62,9 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="loading-container">
-        <p>A carregar dados da Junta...</p>
-      </div>
+  <div className="loading-spinner"></div>
+  <p className="loading-text">A carregar dados da Junta...</p>
+  </div>
     );
   }
 
@@ -73,7 +78,7 @@ const Dashboard = () => {
             {eventos.length > 0 ? (
               // Mostramos apenas os 5 mais recentes na lista do Dashboard
               eventos.slice(0, 5).map(evento => (
-                <EventCard key={evento.id} evento={evento} />
+                <EventCard key={evento.id} evento={evento} onClick={() => abrirDetalheEvento(evento.id)} />
               ))
             ) : (
               <div className="no-events-dashboard">
@@ -95,7 +100,10 @@ const Dashboard = () => {
         {/* COLUNA DIREITA */}
         <div className="right-column">
           <section className="panel calendar-section">
-            <CalendarWidget onViewFull={() => navigate('/dashboard/calendario')} />
+            <CalendarWidget
+              onViewFull={() => navigate('/dashboard/calendario')}
+              onEventClick={(evento) => abrirDetalheEvento(evento.id)}
+            />
           </section>
 
           <section className="panel summary-section">

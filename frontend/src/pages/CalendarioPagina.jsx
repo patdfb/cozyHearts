@@ -132,6 +132,7 @@ const CalendarioPagina = () => {
                         key={event.id} 
                         className="calendar-event-label" 
                         title={event.Nome}
+                        onClick={() => navigate(`/dashboard/evento/${event.id}`)}
                       >
                         {event.Nome}
                       </div>

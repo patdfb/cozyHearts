@@ -55,7 +55,7 @@ const DashboardVazio = () => {
       />
 
       <footer className="welcome-footer">
-        Copyright Cozy Hearts 2026
+        © - 2026 Cozy Hearts - All rights reserved
       </footer>
     </div>
   );

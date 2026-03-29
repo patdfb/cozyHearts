@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Pencil, Trash2, CalendarOff, History, CalendarDays } from 'lucide-react'; 
+import { ArrowLeft, Pencil, Trash2, CalendarOff, History, CalendarDays, Info } from 'lucide-react'; 
 import { isBefore, isAfter, startOfDay, parseISO } from 'date-fns';
 import MainLayout from '../components/template/MainLayout';
 import Button from '../components/atoms/Button';
@@ -72,6 +72,10 @@ const EventosListagem = () => {
 
   const handleEditClick = (evento) => {
     navigate(`/dashboard/editar-evento/${evento.id}`);
+  };
+
+  const handleViewClick = (evento) => {
+    navigate(`/dashboard/evento/${evento.id}`);
   };
 
   const handleSaveEvent = async (eventoAtualizado) => {
@@ -197,6 +201,13 @@ const EventosListagem = () => {
               )}
               
               <div className="event-actions">
+                <button
+                  className="action-btn view-btn"
+                  onClick={() => handleViewClick(evento)}
+                  title="Ver detalhes"
+                >
+                  <Info size={20} />
+                </button>
                 <button 
                   className="action-btn edit-btn" 
                   onClick={() => handleEditClick(evento)}

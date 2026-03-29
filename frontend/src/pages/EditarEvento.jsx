@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { eventService } from '../services/api';
 import MainLayout from '../components/template/MainLayout';
-import { ArrowLeft, ClipboardList, Calendar, MapPin, Upload, Check, AlignLeft, Clock, Star, Plus } from 'lucide-react';
+import { ArrowLeft, ClipboardList, Calendar, MapPin, Route, Map, Building2, Upload, Check, AlignLeft, Clock, Star, Plus, Trash2 } from 'lucide-react';
 import './CriarEvento.css';
 
 const EditarEvento = () => {
@@ -11,6 +11,12 @@ const EditarEvento = () => {
   const [loading, setLoading] = useState(true);
   const [interessesExistentes, setInteressesExistentes] = useState([]);
   const [mostrarNovoInteresse, setMostrarNovoInteresse] = useState(false);
+  const formatarInteresse = (interesse) => {
+    const nome = interesse?.Nome || '';
+    const descricao = interesse?.Descricao || interesse?.descricao || '';
+    return `${nome} - ${descricao || 'Sem descrição'}`;
+  };
+
   const [formData, setFormData] = useState({
     titulo: '',
     dataDisplay: '',
@@ -22,7 +28,8 @@ const EditarEvento = () => {
     id_interesse: '',
     novo_interesse: '',
     imagemFile: null,
-    imagemUrl: ''
+    imagemUrl: '',
+    removerImagem: false
   });
   const [fileName, setFileName] = useState('Alterar Imagem (PNG, JPG)');
 
@@ -72,7 +79,8 @@ const EditarEvento = () => {
           id_interesse: ev.id_interesse || '',
           novo_interesse: '',
           imagemFile: null,
-          imagemUrl: ev.Image || ev.imagem || ''
+          imagemUrl: ev.Image || ev.imagem || '',
+          removerImagem: false
         });
         setFileName(ev.Image || ev.imagem ? 'Imagem já carregada' : 'Alterar Imagem (PNG, JPG)');
         setLoading(false);
@@ -88,14 +96,21 @@ const EditarEvento = () => {
     const file = e.target.files[0];
     if (file) {
       setFileName(file.name);
-      setFormData({ ...formData, imagemFile: file });
+      setFormData({ ...formData, imagemFile: file, removerImagem: false });
     }
+  };
+
+  const handleRemoverImagem = () => {
+    setFormData({ ...formData, imagemFile: null, imagemUrl: '', removerImagem: true });
+    setFileName('Sem imagem');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = new FormData();
+      const deveRemoverImagem = formData.removerImagem || (!formData.imagemFile && !formData.imagemUrl);
+
       data.append('nome', formData.titulo);
       data.append('descricao', formData.descricao);
       data.append('endereco', formData.morada);
@@ -119,6 +134,9 @@ const EditarEvento = () => {
       }
       if (formData.imagemFile) {
         data.append('image', formData.imagemFile);
+      }
+      if (deveRemoverImagem) {
+        data.append('remove_image', 'true');
       }
       await eventService.editarEvento(id, data);
       alert('Evento editado com sucesso!');
@@ -164,7 +182,7 @@ const EditarEvento = () => {
                   >
                     <option value="">Selecionar Categoria/Interesse</option>
                     {interessesExistentes.map(int => (
-                      <option key={int.id} value={int.id}>{int.Nome}</option>
+                      <option key={int.id} value={int.id}>{formatarInteresse(int)}</option>
                     ))}
                   </select>
                   <button 
@@ -181,7 +199,7 @@ const EditarEvento = () => {
                   <div className="icon-box"><Plus size={22} /></div>
                   <input
                     type="text"
-                    placeholder="Nome da Nova Categoria"
+                    placeholder="Nome - descrição (ex: Crochê - Atividade de baixa intensidade)"
                     value={formData.novo_interesse}
                     onChange={(e) => setFormData({ ...formData, novo_interesse: e.target.value })}
                     required={mostrarNovoInteresse}
@@ -226,7 +244,7 @@ const EditarEvento = () => {
               </div>
             </div>
             <div className="form-input-group">
-              <div className="icon-box"><MapPin size={22} /></div>
+              <div className="icon-box"><Route size={22} /></div>
               <input
                 type="text"
                 placeholder="Morada"
@@ -237,7 +255,7 @@ const EditarEvento = () => {
             </div>
             <div className="form-row">
               <div className="form-input-group">
-                <div className="icon-box"><MapPin size={22} /></div>
+                <div className="icon-box"><Map size={22} /></div>
                 <input
                   type="text"
                   placeholder="Freguesia"
@@ -247,7 +265,7 @@ const EditarEvento = () => {
                 />
               </div>
               <div className="form-input-group">
-                <div className="icon-box"><MapPin size={22} /></div>
+                <div className="icon-box"><Building2 size={22} /></div>
                 <input
                   type="text"
                   placeholder="Cidade"
@@ -281,6 +299,16 @@ const EditarEvento = () => {
                 onChange={handleFileChange}
                 className="hidden-file-input"
               />
+              {(formData.imagemFile || formData.imagemUrl) && (
+                <button
+                  type="button"
+                  className="btn-remover-imagem"
+                  onClick={handleRemoverImagem}
+                  title="Remover imagem"
+                >
+                  <Trash2 size={18} />
+                </button>
+              )}
               {/* Preview removido conforme pedido */}
             </div>
             <button type="submit" className="btn-submit-evento">

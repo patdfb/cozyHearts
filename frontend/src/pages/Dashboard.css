@@ -113,3 +113,43 @@
   margin-top: auto; /* Garante que os botões ficam sempre no fundo */
   padding-top: 20px;
 }
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px; /* Ou o tamanho que desejares para a área de espera */
+  gap: 20px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #D9D9D9; /* Cor de fundo do círculo */
+  border-top: 5px solid #105666; /* Cor principal (teu azul) */
+  border-right: 5px solid #839958; /* Cor secundária (teu verde) */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: #105666;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  /* Efeito de "pulsação" no texto */
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Animação de Rotação */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Animação de Pulsação do Texto */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

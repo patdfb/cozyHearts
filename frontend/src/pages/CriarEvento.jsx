@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { eventService } from '../services/api';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ClipboardList, Calendar, MapPin, Upload, Check, AlignLeft, Clock, Star, Plus } from 'lucide-react';
+import { ArrowLeft, ClipboardList, Calendar, MapPin, Route, Map, Building2, Upload, Check, AlignLeft, Clock, Star, Plus } from 'lucide-react';
 import MainLayout from '../components/template/MainLayout';
 import './CriarEvento.css';
 
@@ -9,6 +9,12 @@ const CriarEvento = () => {
   const navigate = useNavigate();
   const [interessesExistentes, setInteressesExistentes] = useState([]);
   const [mostrarNovoInteresse, setMostrarNovoInteresse] = useState(false);
+
+  const formatarInteresse = (interesse) => {
+    const nome = interesse?.Nome || '';
+    const descricao = interesse?.Descricao || interesse?.descricao || '';
+    return `${nome} - ${descricao || 'Sem descrição'}`;
+  };
 
   const [formData, setFormData] = useState({
     titulo: '',
@@ -133,7 +139,7 @@ const CriarEvento = () => {
                   >
                     <option value="">Selecionar Categoria/Interesse</option>
                     {interessesExistentes.map(int => (
-                      <option key={int.id} value={int.id}>{int.Nome}</option>
+                      <option key={int.id} value={int.id}>{formatarInteresse(int)}</option>
                     ))}
                   </select>
                   <button 
@@ -150,7 +156,7 @@ const CriarEvento = () => {
                   <div className="icon-box"><Plus size={22} /></div>
                   <input
                     type="text"
-                    placeholder="Nome da Nova Categoria"
+                    placeholder="Nome - descrição (ex: Crochê - Atividade de baixa intensidade)"
                     value={formData.novo_interesse}
                     onChange={(e) => setFormData({ ...formData, novo_interesse: e.target.value })}
                     required={mostrarNovoInteresse}
@@ -195,7 +201,7 @@ const CriarEvento = () => {
             </div>
 
             <div className="form-input-group">
-              <div className="icon-box"><MapPin size={22} /></div>
+              <div className="icon-box"><Route size={22} /></div>
               <input
                 type="text"
                 placeholder="Morada"
@@ -206,7 +212,7 @@ const CriarEvento = () => {
 
             <div className="form-row">
               <div className="form-input-group">
-                <div className="icon-box"><MapPin size={22} /></div>
+                <div className="icon-box"><Map size={22} /></div>
                 <input
                   type="text"
                   placeholder="Freguesia"
@@ -215,7 +221,7 @@ const CriarEvento = () => {
                 />
               </div>
               <div className="form-input-group">
-                <div className="icon-box"><MapPin size={22} /></div>
+                <div className="icon-box"><Building2 size={22} /></div>
                 <input
                   type="text"
                   placeholder="Cidade"

@@ -128,6 +128,10 @@
   background-color: #105666; /* Azul Botões */
 }
 
+.view-btn {
+  background-color: #2b6c3e;
+}
+
 .delete-btn {
   background-color: #D70004; /* Vermelho Cancelar */
 }

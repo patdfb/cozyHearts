@@ -2,7 +2,7 @@ import React from 'react';
 import { Calendar, MapPin, Clock, Building } from 'lucide-react';
 import './EventCard.css';
 
-const EventCard = ({ evento }) => {
+const EventCard = ({ evento, onClick }) => {
   const formatarDataHora = (dataIso) => {
     if (!dataIso) return { data: 'Sem data', hora: '--:--' };
     const dateObj = new Date(dataIso);
@@ -15,7 +15,18 @@ const EventCard = ({ evento }) => {
   const { data, hora } = formatarDataHora(evento.dia_hora);
 
   return (
-    <div className="event-card-container">
+    <div
+      className={`event-card-container ${onClick ? 'is-clickable' : ''}`}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      } : undefined}
+    >
       {/* Imagem à Esquerda */}
       <div className="event-image-side">
         {evento.Image ? (

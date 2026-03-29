@@ -10,6 +10,7 @@ import EventosListagem from './pages/EventosListagem'
 import CalendarioPagina from './pages/CalendarioPagina'
 import CriarEvento from './pages/CriarEvento'
 import EditarEvento from './pages/EditarEvento'
+import EventoDetalhe from './pages/EventoDetalhe'
 import AdicionarMembro from './pages/AdicionarMembro'
 import './index.css'
 
@@ -26,6 +27,7 @@ function App() {
         <Route path="/dashboard/criar-evento" element={<CriarEvento />} />
         <Route path="/dashboard/adicionar-membro" element={<AdicionarMembro />} />
         <Route path="/dashboard/editar-evento/:id" element={<EditarEvento />} />
+        <Route path="/dashboard/evento/:id" element={<EventoDetalhe />} />
       </Routes>
     </BrowserRouter>
   )
