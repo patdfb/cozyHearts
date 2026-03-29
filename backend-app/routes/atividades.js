@@ -30,15 +30,76 @@ async function requireUsuario(req, res, next) {
   }
 }
 
+async function resolverNomeOrganizador(organizadorParticipante) {
+  if (!organizadorParticipante) return 'Cozy Hearts'
+
+  // Preferred path: Participante.Id_Membro -> Membro.(id_Instituicao|id_Insti) -> Instituicao.Nome
+  const idMembro = organizadorParticipante.Id_Membro ?? organizadorParticipante.id_Membro
+  if (idMembro) {
+    const { data: membro } = await supabase
+      .from('Membro')
+      .select('*')
+      .eq('id', idMembro)
+      .single()
+
+    const idInstituicao =
+      membro?.id_Instituicao ??
+      membro?.id_Insti ??
+      membro?.id_insti
+
+    if (idInstituicao) {
+      const { data: instituicao } = await supabase
+        .from('Instituicao')
+        .select('Nome')
+        .eq('id', idInstituicao)
+        .single()
+
+      if (instituicao?.Nome) return instituicao.Nome
+    }
+
+    // Fallback if institution is missing
+    if (membro?.Nome) return membro.Nome
+  }
+
+  // Fallback path: Participante.Id_Usuario -> Usuario.Nome
+  const idUsuario = organizadorParticipante.Id_Usuario ?? organizadorParticipante.id_Usuario
+  if (idUsuario) {
+    const { data: usuario } = await supabase
+      .from('Usuario')
+      .select('Nome')
+      .eq('id', idUsuario)
+      .single()
+
+    if (usuario?.Nome) return usuario.Nome
+  }
+
+  return 'Cozy Hearts'
+}
+
 // Get all activities
 router.get('/', async (req, res) => {
   try {
-    const { data, error } = await supabase
+    const { data: atividades, error } = await supabase
       .from('Atividade')
-      .select('*, Interesse(*), Localidade(*)')
+      .select('*, Interesse(*), Localidade(*), Participante(*)')
 
     if (error) return res.status(500).json({ error: error.message })
-    res.json(data)
+    
+    // Para cada atividade, buscar o nome do organizador
+    const atividadesComOrganizador = await Promise.all(
+      (atividades || []).map(async (atividade) => {
+        // Find the organizer participant
+        const organizadorParticipante = atividade.Participante?.find(p => p.Organizador === true)
+        const nomeOrganizador = await resolverNomeOrganizador(organizadorParticipante)
+        
+        return {
+          ...atividade,
+          nomeOrganizador
+        }
+      })
+    )
+    
+    res.json(atividadesComOrganizador)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -54,7 +115,14 @@ router.get('/:id', async (req, res) => {
       .single()
 
     if (error || !data) return res.status(404).json({ error: 'Activity not found' })
-    res.json(data)
+    
+    const organizadorParticipante = data.Participante?.find(p => p.Organizador === true)
+    const nomeOrganizador = await resolverNomeOrganizador(organizadorParticipante)
+    
+    res.json({
+      ...data,
+      nomeOrganizador
+    })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
@@ -211,6 +279,37 @@ router.post('/:id/leave', requireUsuario, async (req, res) => {
     if (error) return res.status(500).json({ error: error.message })
 
     res.json({ message: 'Left activity successfully.' })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// Debug endpoint - get raw participation data for an activity
+router.get('/debug/:id', async (req, res) => {
+  try {
+    // Get all participants for the activity
+    const { data: participantes, error: participantesError } = await supabase
+      .from('Participante')
+      .select('*, Usuario(*)')
+      .eq('Id_Atividade', req.params.id)
+
+    if (participantesError) return res.status(500).json({ error: participantesError.message })
+
+    // Try to find the organizer
+    const organizador = participantes?.find(p => p.Organizador === true)
+
+    res.json({
+      totalParticipantes: participantes?.length || 0,
+      participantes: participantes?.map(p => ({
+        id: p.id,
+        organizador: p.Organizador,
+        usuarioId: p.Id_Usuario,
+        usuarioNome: p.Usuario?.Nome || null
+      })) || [],
+      organizadorEncontrado: !!organizador,
+      organizadorNome: organizador?.Usuario?.Nome || 'Não encontrado',
+      organizadorFull: organizador || null
+    })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }

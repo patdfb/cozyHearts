@@ -1,5 +1,6 @@
-export default function GroupCard({ name, photo, onClick, futureEvents=[] }) {
+export default function GroupCard({ name, photo, onClick, futureEvents=[], dataHora, formatarData, formatarHora }) {
   const visibleFutureEvents = Array.isArray(futureEvents) ? futureEvents.slice(0, 2) : []
+  const temDataHora = dataHora && (formatarData || formatarHora)
 
   return (
     <div className="w-full py-4 flex flex-row gap-3">
@@ -11,7 +12,16 @@ export default function GroupCard({ name, photo, onClick, futureEvents=[] }) {
                 {name}
             </p>
 
-            {visibleFutureEvents.length > 0 ? (
+            {temDataHora ? (
+              <div className="w-full text-left text-sm text-text-light">
+                {formatarData && formatarData(dataHora) && (
+                  <p><span className="font-semibold">Data:</span> {formatarData(dataHora)}</p>
+                )}
+                {formatarHora && formatarHora(dataHora) && (
+                  <p><span className="font-semibold">Hora:</span> {formatarHora(dataHora)}</p>
+                )}
+              </div>
+            ) : visibleFutureEvents.length > 0 ? (
               <ul className="w-full text-left text-sm text-text-light">
                 {visibleFutureEvents.map((event, index) => (
                   <li key={`${typeof event === 'string' ? event : event.name}-${index}`} className="truncate">

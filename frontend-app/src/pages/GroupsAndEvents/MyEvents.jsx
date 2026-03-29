@@ -153,10 +153,29 @@ function MyEvents() {
   }
 
   const obterLocal = (evento) => {
-    if (evento.Localidade) {
-      return `${evento.Localidade.Freguesia}, ${evento.Localidade.Cidade}`
+    const endereco = evento.Endereco || ''
+    let localidade = ''
+    
+    // Tenta Localidade (relação com Localidade table)
+    if (evento.Localidade && typeof evento.Localidade === 'object' && !Array.isArray(evento.Localidade)) {
+      const freguesia = evento.Localidade.Freguesia || ''
+      const cidade = evento.Localidade.Cidade || ''
+      localidade = `${freguesia}${freguesia && cidade ? ', ' : ''}${cidade}`
     }
-    return evento.Endereco || 'Local não especificado'
+    
+    // Se Localidade é um array (relação múltipla)
+    if (Array.isArray(evento.Localidade) && evento.Localidade.length > 0) {
+      const loc = evento.Localidade[0]
+      const freguesia = loc.Freguesia || ''
+      const cidade = loc.Cidade || ''
+      localidade = `${freguesia}${freguesia && cidade ? ', ' : ''}${cidade}`
+    }
+    
+    // Combina endereco com localidade
+    if (endereco && localidade) {
+      return `${endereco}, ${localidade}`
+    }
+    return endereco || localidade || 'Local não especificado'
   }
 
   return (

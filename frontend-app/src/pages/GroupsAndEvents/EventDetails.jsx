@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import Title from '../../components/Title'
+import { Calendar, Clock, MapPin, Heart, User } from 'lucide-react'
 
 function EventDetails() {
   const { id } = useParams()
@@ -80,10 +80,29 @@ function EventDetails() {
   }
 
   const obterLocal = (evento) => {
-    if (evento.Localidade) {
-      return `${evento.Localidade.Freguesia}, ${evento.Localidade.Cidade}`
+    const endereco = evento.Endereco || ''
+    let localidade = ''
+    
+    // Tenta Localidade (relação com Localidade table)
+    if (evento.Localidade && typeof evento.Localidade === 'object' && !Array.isArray(evento.Localidade)) {
+      const freguesia = evento.Localidade.Freguesia || ''
+      const cidade = evento.Localidade.Cidade || ''
+      localidade = `${freguesia}${freguesia && cidade ? ', ' : ''}${cidade}`
     }
-    return evento.Endereco || 'Local não especificado'
+    
+    // Se Localidade é um array (relação múltipla)
+    if (Array.isArray(evento.Localidade) && evento.Localidade.length > 0) {
+      const loc = evento.Localidade[0]
+      const freguesia = loc.Freguesia || ''
+      const cidade = loc.Cidade || ''
+      localidade = `${freguesia}${freguesia && cidade ? ', ' : ''}${cidade}`
+    }
+    
+    // Combina endereco com localidade
+    if (endereco && localidade) {
+      return `${endereco}, ${localidade}`
+    }
+    return endereco || localidade || 'Local não especificado'
   }
 
   const handleSubscription = async () => {
@@ -119,47 +138,76 @@ function EventDetails() {
     }
   }
 
-  if (loading) return <section id="center" className="flex min-h-dvh w-full flex-col"><p>Carregando...</p></section>
-  if (pageError) return <section id="center" className="flex min-h-dvh w-full flex-col"><p className="text-red-500">{pageError}</p></section>
-  if (!evento) return <section id="center" className="flex min-h-dvh w-full flex-col"><p>Evento não encontrado</p></section>
+  if (loading) return <section id="center" className="flex min-h-dvh w-full items-center justify-center"><p className="text-lg">Carregando...</p></section>
+  if (pageError) return <section id="center" className="flex min-h-dvh w-full items-center justify-center"><p className="text-lg text-red-500">{pageError}</p></section>
+  if (!evento) return <section id="center" className="flex min-h-dvh w-full items-center justify-center"><p className="text-lg">Evento não encontrado</p></section>
 
   return (
-    <section id="center" className="relative flex min-h-dvh w-full flex-col pb-24">
-      <Title name="Mais Detalhes" path="/myEvents" />
+    <section id="center" className="relative flex min-h-dvh w-full flex-col pb-28">
+      {/* Imagem do evento - no topo */}
+      {evento.Image && (
+        <div className="w-full h-48 rounded-b-2xl overflow-hidden shadow-md">
+          <img 
+            src={evento.Image} 
+            alt={evento.Nome}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
 
-      <div className="px-4 pb-6 text-left text-text-light">
-        <h1 className="mb-4 text-3xl font-bold leading-tight text-black">
+      {/* Conteúdo principal */}
+      <div className="px-6 py-8 flex-1">
+
+        {/* Título e Badge */}
+        <h1 className="mb-3 text-4xl font-bold text-black">
           {evento.Nome}
         </h1>
+        
+        {evento.Interesse && (
+          <div className="mb-6 inline-block px-4 py-2 bg-purple-100 rounded-full text-base font-semibold text-purple-700">
+            {evento.Interesse.Nome}
+          </div>
+        )}
 
-        <div className="mb-6 space-y-1 text-base">
-          <p>
-            <span className="font-semibold">Dia:</span> {formatarData(evento.dia_hora)}
+        {/* Informações em cards simples */}
+        <div className="space-y-3 mb-6 text-base">
+          <p className="text-gray-700">
+            <span className="font-semibold text-black">Data:</span> {formatarData(evento.dia_hora)}
           </p>
-          <p>
-            <span className="font-semibold">Hora:</span> {formatarHora(evento.dia_hora)}
+          <p className="text-gray-700">
+            <span className="font-semibold text-black">Hora:</span> {formatarHora(evento.dia_hora)}
           </p>
-          <p>
-            <span className="font-semibold">Local:</span> {obterLocal(evento)}
+          <p className="text-gray-700">
+            <span className="font-semibold text-black">Local:</span> {obterLocal(evento)}
           </p>
-          <p>
-            <span className="font-semibold">Interesse:</span> {evento.Interesse?.Nome || 'Não especificado'}
+          <p className="text-gray-700">
+            <span className="font-semibold text-black">Organizador:</span> {evento.nomeOrganizador || 'Cozy Hearts'}
           </p>
         </div>
 
-        <h2 className="mb-3 text-2xl font-bold text-black">Descrição</h2>
-        <p className="mb-4 text-base leading-relaxed">
-          {evento.Descricao || 'Sem descrição'}
-        </p>
-        {actionError ? <p className="text-red-500">{actionError}</p> : null}
+        {/* Descrição */}
+        <div className="mb-6 p-4 bg-gray-50 rounded-xl">
+          <h3 className="mb-2 font-bold text-lg text-black">Sobre o Evento</h3>
+          <p className="text-base text-gray-700 leading-relaxed">
+            {evento.Descricao || 'Sem descrição disponível'}
+          </p>
+        </div>
+
+        {/* Erro */}
+        {actionError && (
+          <div className="mb-4 p-4 bg-red-100 border border-red-300 rounded-lg text-red-700 text-base">
+            {actionError}
+          </div>
+        )}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 z-20 border-t-4 border-button bg-background px-4 pb-4 pt-3">
+      {/* Botões fixos na base */}
+      <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-gray-200 bg-white px-4 py-5">
         <div className="flex gap-3">
           <button
             type="button"
-            onClick={() => navigate('/myEvents')}
-            className="h-10 w-full rounded-4xl bg-button text-sm font-bold text-white"
+            onClick={() => navigate(-1)}
+            className="h-12 flex-1 rounded-4xl bg-gray-200 text-gray-800 text-base font-bold hover:bg-gray-300 transition-colors"
           >
             Voltar
           </button>
@@ -167,13 +215,17 @@ function EventDetails() {
             type="button"
             onClick={handleSubscription}
             disabled={isActionLoading}
-            className={`h-10 w-full rounded-4xl text-sm font-bold text-white ${isSubscribed ? 'bg-error' : 'bg-button'} ${isActionLoading ? 'opacity-70' : ''}`}
+            className={`h-12 flex-1 rounded-4xl text-base font-bold text-white transition-all ${
+              isSubscribed 
+                ? 'bg-red-500 hover:bg-red-600' 
+                : 'bg-green-600 hover:bg-green-700'
+            } ${isActionLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
             {isActionLoading
               ? 'A processar...'
               : isSubscribed
                 ? 'Cancelar Inscrição'
-                : 'Inscrever'}
+                : 'Inscrever-me'}
           </button>
         </div>
       </div>

@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.js'
 import atividadesRoutes from './routes/atividades.js'
 import usuariosRoutes from './routes/usuarios.js'
 import interesesRoutes from './routes/interesses.js'
+import gruposRoutes from './routes/grupos.js'
 
 dotenv.config()
 
@@ -20,6 +21,7 @@ app.use('/auth', authRoutes)
 app.use('/atividades', atividadesRoutes)
 app.use('/usuarios', usuariosRoutes)
 app.use('/interesses', interesesRoutes)
+app.use('/grupos', gruposRoutes)
 
 app.get('/', (req, res) => res.json({ message: 'Cozy Hearts Backend is running!' }))
 

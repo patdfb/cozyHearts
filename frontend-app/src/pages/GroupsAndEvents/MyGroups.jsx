@@ -1,11 +1,33 @@
 import TitleButtons from '../../components/TitleButtons'
 import GroupCard from '../../components/GroupCard'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function MyGroups() {
+  const navigate = useNavigate()
   const [atividades, setAtividades] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+
+  const formatarData = (dia_hora) => {
+    if (!dia_hora) return ''
+    try {
+      const date = new Date(dia_hora)
+      return date.toLocaleDateString('pt-PT', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })
+    } catch {
+      return ''
+    }
+  }
+
+  const formatarHora = (dia_hora) => {
+    if (!dia_hora) return ''
+    try {
+      const date = new Date(dia_hora)
+      return date.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })
+    } catch {
+      return ''
+    }
+  }
 
   useEffect(() => {
     const fetchAtividades = async () => {
@@ -57,7 +79,10 @@ function MyGroups() {
               key={atividade.id}
               name={atividade.Nome} 
               photo={atividade.Image || "https://i.ytimg.com/vi/uQd11N9pj5U/maxresdefault.jpg"} 
-              onClick={() => {}}
+              onClick={() => navigate(`/group/${atividade.id}`)}
+              dataHora={atividade.dia_hora}
+              formatarData={formatarData}
+              formatarHora={formatarHora}
             />
           ))}
         </div>

@@ -1,4 +1,5 @@
 import BigButton from '../components/BigButton'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ProfileFooter from '../components/ProfileFooter'
 
@@ -15,19 +16,44 @@ const firstName = (name = '') => {
 
 function Main() {
   const navigate = useNavigate()
+  const [displayName, setDisplayName] = useState('Usuario')
+  const displayGreeting = greetingByHour(new Date().getHours())
 
-  let displayName = 'Usuário'
-  let displayGreeting = 'Olá'
+  useEffect(() => {
+    const fetchNomeDoUsuario = async () => {
+      try {
+        const authData = JSON.parse(localStorage.getItem('cozy_hearts_auth') || '{}')
 
-  try {
-    const auth = JSON.parse(localStorage.getItem('cozy_hearts_auth') || 'null')
-    if (auth?.usuario?.Nome) {
-      displayName = firstName(auth.usuario.Nome)
-      displayGreeting = greetingByHour(new Date().getHours())
+        if (!authData?.token) {
+          setDisplayName('Usuario')
+          return
+        }
+
+        // O backend resolve o usuario usando o email do token e procura na tabela Usuario
+        const response = await fetch('http://localhost:3000/usuarios/profile', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authData.token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if (!response.ok) {
+          setDisplayName('Usuario')
+          return
+        }
+
+        const profile = await response.json()
+        const nome = profile?.Nome ? firstName(profile.Nome) : 'Usuario'
+        setDisplayName(nome)
+      } catch (e) {
+        console.warn('Erro ao buscar nome no perfil', e)
+        setDisplayName('Usuario')
+      }
     }
-  } catch (e) {
-    console.warn('Erro ao ler usuário localStorage', e)
-  }
+
+    fetchNomeDoUsuario()
+  }, [])
 
   return (
     <>

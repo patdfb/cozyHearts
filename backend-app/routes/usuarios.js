@@ -29,6 +29,51 @@ async function requireUsuario(req, res, next) {
   }
 }
 
+async function resolverNomeOrganizador(organizadorParticipante) {
+  if (!organizadorParticipante) return 'Cozy Hearts'
+
+  // Preferred path: Participante.Id_Membro -> Membro.(id_Instituicao|id_Insti) -> Instituicao.Nome
+  const idMembro = organizadorParticipante.Id_Membro ?? organizadorParticipante.id_Membro
+  if (idMembro) {
+    const { data: membro } = await supabase
+      .from('Membro')
+      .select('*')
+      .eq('id', idMembro)
+      .single()
+
+    const idInstituicao =
+      membro?.id_Instituicao ??
+      membro?.id_Insti ??
+      membro?.id_insti
+
+    if (idInstituicao) {
+      const { data: instituicao } = await supabase
+        .from('Instituicao')
+        .select('Nome')
+        .eq('id', idInstituicao)
+        .single()
+
+      if (instituicao?.Nome) return instituicao.Nome
+    }
+
+    if (membro?.Nome) return membro.Nome
+  }
+
+  // Fallback path: Participante.Id_Usuario -> Usuario.Nome
+  const idUsuario = organizadorParticipante.Id_Usuario ?? organizadorParticipante.id_Usuario
+  if (idUsuario) {
+    const { data: usuario } = await supabase
+      .from('Usuario')
+      .select('Nome')
+      .eq('id', idUsuario)
+      .single()
+
+    if (usuario?.Nome) return usuario.Nome
+  }
+
+  return 'Cozy Hearts'
+}
+
 // List all users
 router.get('/', async (req, res) => {
   try {
@@ -67,20 +112,25 @@ router.get('/activities', requireUsuario, async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('Participante')
-      .select('*, Atividade(*, Interesse(*), Localidade(*), Participante(*, Usuario(*)))')
+      .select('*, Atividade(*, Interesse(*), Localidade(*), Participante(*))')
       .eq('Id_Usuario', req.usuario.id)
 
     if (error) return res.status(500).json({ error: error.message })
 
     // Find the organizer for each activity
-    const activitiesWithOrganizer = data.map(p => {
-      const organizador = p.Atividade.Participante?.find(part => part.Organizador)
-      return {
-        ...p.Atividade,
-        isOrganizador: p.Organizador,
-        nomeOrganizador: organizador?.Usuario?.Nome || 'Desconhecido'
-      }
-    })
+    const activitiesWithOrganizer = await Promise.all(
+      (data || []).map(async (p) => {
+        // Find organizer participant
+        const organizadorParticipante = p.Atividade?.Participante?.find(part => part.Organizador === true)
+        const nomeOrganizador = await resolverNomeOrganizador(organizadorParticipante)
+        
+        return {
+          ...p.Atividade,
+          isOrganizador: p.Organizador,
+          nomeOrganizador
+        }
+      })
+    )
 
     res.json(activitiesWithOrganizer)
   } catch (error) {
