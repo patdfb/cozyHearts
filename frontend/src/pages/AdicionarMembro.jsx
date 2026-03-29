@@ -12,7 +12,7 @@ const AdicionarMembro = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('supabase_token') || JSON.parse(localStorage.getItem('supabase_session'))?.access_token;
-      const response = await fetch('http://localhost:3000/membros/invite', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/membros/invite`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

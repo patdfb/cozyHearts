@@ -18,7 +18,7 @@ const DashboardVazio = () => {
           token = session?.access_token;
         }
         if (!token) return;
-        const response = await fetch('http://localhost:3000/membros/me', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/membros/me`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) return;

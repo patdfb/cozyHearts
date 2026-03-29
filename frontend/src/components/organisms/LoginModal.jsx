@@ -20,7 +20,7 @@ const LoginModal = ({ isOpen, onClose, onSwitchToRegistar }) => {
       // Buscar membro e decidir redirecionamento
       const token = data.token || localStorage.getItem('supabase_token') || JSON.parse(localStorage.getItem('supabase_session'))?.access_token;
       if (token) {
-        const res = await fetch('http://localhost:3000/membros/me', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/membros/me`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const membro = await res.json();

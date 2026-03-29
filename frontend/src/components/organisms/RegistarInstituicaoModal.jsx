@@ -43,7 +43,7 @@ const RegistarInstituicaoModal = ({ isOpen, onClose }) => {
     formData.append('comprovativo', file);
 
     try {
-      const response = await fetch('http://localhost:3000/instituicao/register', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/instituicao/register`, {
         method: 'POST',
         body: formData
       });
@@ -64,7 +64,7 @@ const RegistarInstituicaoModal = ({ isOpen, onClose }) => {
       const idInstituicao = data.instituicao?.id;
       if (idInstituicao) {
         const token = localStorage.getItem('supabase_token') || JSON.parse(localStorage.getItem('supabase_session'))?.access_token;
-        await fetch('http://localhost:3000/membros/me', {
+        await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/membros/me`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

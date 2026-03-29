@@ -3,6 +3,8 @@ import Header from '../components/organisms/Header';
 import LoginModal from '../components/organisms/LoginModal';
 import RegistarModel from '../components/organisms/RegistarModel';
 import './BemVindo.css';
+import evento1 from '../assets/evento1.png';
+import evento2 from '../assets/evento2.png';
 
 const BemVindo = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -50,8 +52,8 @@ const BemVindo = () => {
 
           <div className="image-column">
             <div className="image-frame">
-              <img src="/src/assets/evento1.png" alt="Evento Comunidade" />
-              <img src="/src/assets/evento2.png" alt="Evento Xadrez" />
+              <img src={evento1} alt="Evento Comunidade" />
+              <img src={evento2} alt="Evento Xadrez" />
             </div>
           </div>
         </div>

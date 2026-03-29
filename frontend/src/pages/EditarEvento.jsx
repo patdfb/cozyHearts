@@ -37,7 +37,7 @@ const EditarEvento = () => {
   useEffect(() => {
     const fetchInteresses = async () => {
       try {
-        const response = await fetch('http://localhost:3000/interesses');
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/interesses`);
         if (!response.ok) {
           throw new Error('Falha ao buscar interesses do servidor');
         }
