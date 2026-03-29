@@ -61,10 +61,6 @@ const router = createBrowserRouter([
     path: '/otherInterests',
     element: <OtherInterests />,
   },
-  {
-    path: '*',
-    element: <Navigate to="/" replace />,
-  },
 ])
 
 export default router

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>Test API</h1>
+    <button onclick="testRegister()">Register Test User</button>
+    <button onclick="testLogin()">Login Test User</button>
+    <div id="result"></div>
+
+    <script>
+        async function testRegister() {
+            try {
+                const res = await fetch('http://localhost:3000/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nome: 'Test User',
+                        email: 'test@example.com',
+                        data_de_nascimento: '1990-01-01',
+                        telemovel: '',
+                        password: 'test123'
+                    })
+                });
+                const data = await res.json();
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('result').textContent = 'Error: ' + err.message;
+            }
+        }
+
+        async function testLogin() {
+            try {
+                const res = await fetch('http://localhost:3000/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'test@example.com',
+                        password: 'test123'
+                    })
+                });
+                const data = await res.json();
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('result').textContent = 'Error: ' + err.message;
+            }
+        }
+    </script>
+</body>
+</html>
