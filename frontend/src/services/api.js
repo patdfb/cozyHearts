@@ -1,5 +1,18 @@
   const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
+  const parseApiResponse = async (response) => {
+    const text = await response.text();
+    let data = null;
+
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch {
+      data = null;
+    }
+
+    return { data, text };
+  };
+
   export const eventService = {
     async getEventos() {
       const token = localStorage.getItem('supabase_token');
@@ -69,14 +82,21 @@
         body: JSON.stringify({ email, password })
       });
 
+      const { data, text } = await parseApiResponse(response);
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Falha no login');
+        throw new Error(data?.error || 'Falha no login');
       }
 
-      const data = await response.json();
+      if (!data) {
+        if (text.startsWith('<!DOCTYPE') || text.startsWith('<html')) {
+          throw new Error('A API devolveu HTML em vez de JSON. Verifique a VITE_API_URL no deploy.');
+        }
+        throw new Error('Resposta inesperada da API no login.');
+      }
+
       localStorage.setItem('supabase_token', data.token);
-      localStorage.setItem('user_data', JSON.stringify(data.membro));
+      localStorage.setItem('user_data', JSON.stringify(data.membro || data.usuario || null));
       return data;
     },
 
@@ -87,11 +107,12 @@
         body: JSON.stringify(userData)
       });
 
+      const { data } = await parseApiResponse(response);
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Erro no registo');
+        throw new Error(data?.error || 'Erro no registo');
       }
-      return await response.json();
+      return data;
     },
 
   async updatePerfil(formData) {
