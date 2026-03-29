@@ -5,7 +5,9 @@ import Register from '../pages/Register/Register'
 import RegisterChoice from '../pages/Register/RegisterChoice'
 import RegisterFam from '../pages/Register/RegisterFam'
 import Main from '../pages/Main'
+import Profile from '../pages/Profile'
 import MyGroups from '../pages/GroupsAndEvents/MyGroups'
+import GroupDetails from '../pages/GroupsAndEvents/GroupDetails'
 import MyEvents from '../pages/GroupsAndEvents/MyEvents'
 import EventDetails from '../pages/GroupsAndEvents/EventDetails'
 import EventsNearMe from '../pages/EventsNearMe'
@@ -38,8 +40,16 @@ const router = createBrowserRouter([
     element: <Main />,
   },
   {
+    path: '/profile',
+    element: <Profile />,
+  },
+  {
     path: '/myGroups',
     element: <MyGroups />,
+  },
+  {
+    path: '/groupDetails',
+    element: <GroupDetails />,
   },
   {
     path: '/myEvents',

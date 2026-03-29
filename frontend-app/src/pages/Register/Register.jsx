@@ -1,6 +1,7 @@
 import BigButton from '../../components/BigButton'
-import { CircleUserRound, Lock, CalendarDays, Smile } from 'lucide-react'
+import { CircleUserRound, Lock, CalendarDays, Smile, House, Building2 } from 'lucide-react'
 import Input from '../../components/Input'
+import Title from '../../components/Title'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -56,8 +57,9 @@ function Register() {
   }
 
   return (
-    <>
-      <section id="center" className="grid min-h-dvh w-full place-items-center px-4">
+    <section id="center" className="flex min-h-dvh w-full flex-col">
+      <Title name="Criar conta" path="/register-choice" />
+      <section className="grid w-full flex-1 place-items-center px-4 pb-6">
         <div className="mx-auto flex w-fit flex-col gap-10 text-center">
           <Input
             icon={<Smile size={35} />}
@@ -78,6 +80,9 @@ function Register() {
             onChange={(e) => setDataNascimento(e.target.value)}
             type="date"
           />
+          <Input icon={<House size={35}/>} placeholder="Morada" />
+          <Input icon={<Building2 size={35}/>} placeholder="Localidade" />
+
           <Input
             icon={<Lock size={35} />}
             placeholder="Senha"
@@ -89,12 +94,7 @@ function Register() {
           {error && <p className="text-red-500">{error}</p>}
         </div>
       </section>
-
-      <div className="ticks"></div>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    </section>
   )
 }
 
