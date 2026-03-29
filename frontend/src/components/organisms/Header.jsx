@@ -27,7 +27,7 @@ const Header = ({ onLoginClick, onRegistarClick, isVazio }) => {
       <header className="main-header">
         {/* LOGO - Agora clicável e flexível */}
         <Link to={isPublicPage ? "/" : "/dashboard"} className="logo-link">
-          <img src="/src/assets/Cozy Hearts.png" alt="Logo" className="header-logo-img" />
+          <img src="/src/assets/Cozy_Hearts.png" alt="Logo" className="header-logo-img" />
         </Link>
         
         <div className="nav-links">

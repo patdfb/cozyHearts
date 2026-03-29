@@ -50,8 +50,8 @@ const BemVindo = () => {
 
           <div className="image-column">
             <div className="image-frame">
-              <img src="/src/assets/evento1.webp" alt="Evento Comunidade" />
-              <img src="/src/assets/evento2.jpg" alt="Evento Xadrez" />
+              <img src="/src/assets/evento1.png" alt="Evento Comunidade" />
+              <img src="/src/assets/evento2.png" alt="Evento Xadrez" />
             </div>
           </div>
         </div>
