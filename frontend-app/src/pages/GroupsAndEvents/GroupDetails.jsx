@@ -132,16 +132,16 @@ function GroupDetails() {
                   key={membro.id} 
                   className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
                 >
-                  {membro.Usuario?.Image && (
+                  {!membro.Organizador && membro.Usuario?.Image && (
                     <img 
                       src={membro.Usuario.Image} 
-                      alt={membro.Usuario.Nome}
+                      alt={membro.nomeExibicao || membro.Usuario?.Nome || 'Membro'}
                       className="w-10 h-10 rounded-full object-cover"
                     />
                   )}
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-black">
-                      {membro.Usuario?.Nome || 'Desconhecido'}
+                      {membro.nomeExibicao || membro.Usuario?.Nome || 'Desconhecido'}
                       {membro.Organizador && (
                         <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
                           Organizador

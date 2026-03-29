@@ -3,6 +3,69 @@ import { supabase } from '../lib/supabase.js'
 
 const router = express.Router()
 
+async function resolverPerfilParticipante(participante) {
+  // Participante ligado a Usuario
+  if (participante?.Id_Usuario) {
+    const { data: usuario } = await supabase
+      .from('Usuario')
+      .select('id, Nome, Email, Image')
+      .eq('id', participante.Id_Usuario)
+      .single()
+
+    if (usuario) {
+      return {
+        Usuario: usuario,
+        nomeExibicao: usuario.Nome || 'Desconhecido',
+      }
+    }
+  }
+
+  // Participante ligado a Membro (instituicao)
+  if (participante?.Id_Membro) {
+    const { data: membro } = await supabase
+      .from('Membro')
+      .select('*')
+      .eq('id', participante.Id_Membro)
+      .single()
+
+    if (membro) {
+      const idInstituicao = membro.id_Instituicao ?? membro.id_Insti ?? membro.id_insti
+      let nomeInstituicao = null
+
+      if (idInstituicao) {
+        const { data: instituicao } = await supabase
+          .from('Instituicao')
+          .select('Nome')
+          .eq('id', idInstituicao)
+          .single()
+
+        nomeInstituicao = instituicao?.Nome || null
+      }
+
+      const nomeExibicao =
+        (participante.Organizador && nomeInstituicao) ||
+        membro.Nome ||
+        nomeInstituicao ||
+        'Desconhecido'
+
+      return {
+        Usuario: {
+          id: participante.Id_Membro,
+          Nome: nomeExibicao,
+          Email: membro.Email || null,
+          Image: membro.Image || null,
+        },
+        nomeExibicao,
+      }
+    }
+  }
+
+  return {
+    Usuario: { id: null, Nome: 'Desconhecido', Email: null, Image: null },
+    nomeExibicao: 'Desconhecido',
+  }
+}
+
 // Middleware to require authenticated Usuario
 async function requireUsuario(req, res, next) {
   try {
@@ -55,18 +118,15 @@ router.get('/:id/members', requireUsuario, async (req, res) => {
       return res.status(500).json({ error: participantesError.message })
     }
 
-    // Fetch user details for each participant
+    // Fetch participant display details for each participant
     const membros = await Promise.all(
       (participantes || []).map(async (p) => {
-        const { data: usuario } = await supabase
-          .from('Usuario')
-          .select('id, Nome, Email, Image')
-          .eq('id', p.Id_Usuario)
-          .single()
+        const perfil = await resolverPerfilParticipante(p)
         
         return {
           ...p,
-          Usuario: usuario || { id: p.Id_Usuario, Nome: 'Desconhecido', Email: null, Image: null }
+          Usuario: perfil.Usuario,
+          nomeExibicao: perfil.nomeExibicao,
         }
       })
     )
