@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import ProfileFooter from '../components/ProfileFooter'
 
 const greetingByHour = (hour) => {
-  if (hour >= 6 && hour < 12) return 'Bom dia'
-  if (hour >= 12 && hour < 18) return 'Boa tarde'
+  if (hour >= 7 && hour < 12) return 'Bom dia'
+  if (hour >= 12 && hour < 19) return 'Boa tarde'
   return 'Boa noite'
 }
 
@@ -14,9 +14,25 @@ const firstName = (name = '') => {
   return name.trim().split(' ')[0]
 }
 
+const normalizeName = (name = '') => {
+  const cleaned = String(name || '').trim()
+  if (!cleaned) return ''
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1).toLowerCase()
+}
+
+const getNomeLocal = () => {
+  try {
+    const authData = JSON.parse(localStorage.getItem('cozy_hearts_auth') || '{}')
+    if (authData?.usuario?.Nome) return normalizeName(firstName(authData.usuario.Nome))
+  } catch {
+    // no-op
+  }
+  return 'Pessoa'
+}
+
 function Main() {
   const navigate = useNavigate()
-  const [displayName, setDisplayName] = useState('Usuario')
+  const [displayName, setDisplayName] = useState(getNomeLocal)
   const displayGreeting = greetingByHour(new Date().getHours())
 
   useEffect(() => {
@@ -25,7 +41,7 @@ function Main() {
         const authData = JSON.parse(localStorage.getItem('cozy_hearts_auth') || '{}')
 
         if (!authData?.token) {
-          setDisplayName('Usuario')
+          setDisplayName(getNomeLocal())
           return
         }
 
@@ -39,16 +55,16 @@ function Main() {
         })
 
         if (!response.ok) {
-          setDisplayName('Usuario')
+          setDisplayName(getNomeLocal())
           return
         }
 
         const profile = await response.json()
-        const nome = profile?.Nome ? firstName(profile.Nome) : 'Usuario'
+        const nome = profile?.Nome ? normalizeName(firstName(profile.Nome)) : getNomeLocal()
         setDisplayName(nome)
       } catch (e) {
         console.warn('Erro ao buscar nome no perfil', e)
-        setDisplayName('Usuario')
+        setDisplayName(getNomeLocal())
       }
     }
 
