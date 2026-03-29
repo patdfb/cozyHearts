@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Title from '../../components/Title'
 import InterestCard from '../../components/InterestCard'
 import Button from '../../components/Button'
-import { getInteresses } from '../../services/api'
+import { getMeusInteresses, removerInteresse } from '../../services/api'
 
 function MyInterests() {
   const navigate = useNavigate()
@@ -12,20 +12,43 @@ function MyInterests() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetchInteresses()
+    fetchMeusInteresses()
   }, [])
 
-  const fetchInteresses = async () => {
+  const fetchMeusInteresses = async () => {
     try {
       setLoading(true)
-      const data = await getInteresses()
+      const authData = JSON.parse(localStorage.getItem('cozy_hearts_auth') || '{}')
+      if (!authData.token) {
+        setError('Utilizador não autenticado')
+        return
+      }
+
+      const data = await getMeusInteresses(authData.token)
       setInteresses(data)
       setError(null)
     } catch (err) {
-      console.error('Erro ao carregar interesses:', err)
-      setError('Erro ao carregar interesses')
+      console.error('Erro ao carregar meus interesses:', err)
+      setError('Erro ao carregar meus interesses')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleExclude = async (interesseId) => {
+    try {
+      const authData = JSON.parse(localStorage.getItem('cozy_hearts_auth') || '{}')
+      if (!authData.token) {
+        setError('Utilizador não autenticado')
+        return
+      }
+
+      await removerInteresse(interesseId, authData.token)
+      // Remove from local state
+      setInteresses(interesses.filter(interesse => interesse.id !== interesseId))
+    } catch (err) {
+      console.error('Erro ao remover interesse:', err)
+      setError('Erro ao remover interesse')
     }
   }
 
@@ -38,12 +61,13 @@ function MyInterests() {
           {error && <p className="text-red-500">{error}</p>}
           {!loading && interesses.length === 0 && <p>Nenhum interesse encontrado</p>}
           {!loading && interesses.map((interesse) => (
-            <InterestCard 
-              key={interesse.id} 
-              name={interesse.Nome} 
-              photo={interesse.Foto || "https://i.ytimg.com/vi/uQd11N9pj5U/maxresdefault.jpg"} 
-              description={interesse.Descricao || "Sem descrição"} 
-              onClick={() => {}} 
+            <InterestCard
+              key={interesse.id}
+              name={interesse.Nome}
+              photo={interesse.Foto || "https://i.ytimg.com/vi/uQd11N9pj5U/maxresdefault.jpg"}
+              description={interesse.Descricao || "Sem descrição"}
+              exclude={true}
+              onClick={() => handleExclude(interesse.id)}
             />
           ))}
         </div>

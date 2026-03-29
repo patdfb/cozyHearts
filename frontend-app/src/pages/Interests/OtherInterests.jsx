@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import Title from '../../components/Title'
 import InterestCard from '../../components/InterestCard'
 import Button from '../../components/Button'
-import { getInteresses } from '../../services/api'
+import { getInteresses, getMeusInteresses, adicionarInteresse } from '../../services/api'
 
 function OtherInterests() {
   const navigate = useNavigate()
-  const [interesses, setInteresses] = useState([])
+  const [allInteresses, setAllInteresses] = useState([])
+  const [meusInteresses, setMeusInteresses] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -18,8 +19,19 @@ function OtherInterests() {
   const fetchInteresses = async () => {
     try {
       setLoading(true)
-      const data = await getInteresses()
-      setInteresses(data)
+      const authData = JSON.parse(localStorage.getItem('cozy_hearts_auth') || '{}')
+      if (!authData.token) {
+        setError('Utilizador não autenticado')
+        return
+      }
+
+      const [allData, meusData] = await Promise.all([
+        getInteresses(),
+        getMeusInteresses(authData.token)
+      ])
+
+      setAllInteresses(allData)
+      setMeusInteresses(meusData)
       setError(null)
     } catch (err) {
       console.error('Erro ao carregar interesses:', err)
@@ -29,6 +41,31 @@ function OtherInterests() {
     }
   }
 
+  const handleAddInterest = async (interesseId) => {
+    try {
+      const authData = JSON.parse(localStorage.getItem('cozy_hearts_auth') || '{}')
+      if (!authData.token) {
+        setError('Utilizador não autenticado')
+        return
+      }
+
+      await adicionarInteresse(interesseId, authData.token)
+      // Move interest from allInteresses to meusInteresses
+      const interesse = allInteresses.find(i => i.id === interesseId)
+      if (interesse) {
+        setMeusInteresses([...meusInteresses, interesse])
+      }
+    } catch (err) {
+      console.error('Erro ao adicionar interesse:', err)
+      setError('Erro ao adicionar interesse')
+    }
+  }
+
+  // Filter out interests that user already has
+  const outrosInteresses = allInteresses.filter(interesse =>
+    !meusInteresses.some(meuInteresse => meuInteresse.id === interesse.id)
+  )
+
   return (
     <>
       <section id="center" className="flex min-h-dvh w-full flex-col pb-24">
@@ -36,15 +73,16 @@ function OtherInterests() {
         <div className="px-4">
           {loading && <p>Carregando interesses...</p>}
           {error && <p className="text-red-500">{error}</p>}
-          {!loading && interesses.length === 0 && <p>Nenhum interesse encontrado</p>}
-          {!loading && interesses.map((interesse) => (
-            <InterestCard 
-              key={interesse.id} 
-              name={interesse.Nome} 
-              photo={interesse.Foto || "https://i.ytimg.com/vi/uQd11N9pj5U/maxresdefault.jpg"} 
-              description={interesse.Descricao || "Sem descrição"} 
-              exclude={false} 
-              onClick={() => {}} 
+          {!loading && outrosInteresses.length === 0 && <p>Nenhum outro interesse encontrado</p>}
+          {!loading && outrosInteresses.map((interesse) => (
+            <InterestCard
+              key={interesse.id}
+              name={interesse.Nome}
+              photo={interesse.Foto || "https://i.ytimg.com/vi/uQd11N9pj5U/maxresdefault.jpg"}
+              description={interesse.Descricao || "Sem descrição"}
+              exclude={false}
+              buttonText="Adicionar interesse"
+              onClick={() => handleAddInterest(interesse.id)}
             />
           ))}
         </div>

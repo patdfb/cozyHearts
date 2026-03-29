@@ -12,3 +12,56 @@ export const getInteresses = async () => {
     throw error
   }
 }
+
+export const getMeusInteresses = async (token) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/interesses/meus`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    if (!response.ok) {
+      throw new Error('Erro ao buscar meus interesses')
+    }
+    return await response.json()
+  } catch (error) {
+    console.error('Erro ao buscar meus interesses:', error)
+    throw error
+  }
+}
+
+export const adicionarInteresse = async (interesseId, token) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/interesses/adicionar/${interesseId}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    if (!response.ok) {
+      throw new Error('Erro ao adicionar interesse')
+    }
+    return await response.json()
+  } catch (error) {
+    console.error('Erro ao adicionar interesse:', error)
+    throw error
+  }
+}
+
+export const removerInteresse = async (interesseId, token) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/interesses/remover/${interesseId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    if (!response.ok) {
+      throw new Error('Erro ao remover interesse')
+    }
+    return await response.json()
+  } catch (error) {
+    console.error('Erro ao remover interesse:', error)
+    throw error
+  }
+}
