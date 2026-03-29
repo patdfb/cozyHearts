@@ -9,6 +9,8 @@ function Register() {
   const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
   const [dataNascimento, setDataNascimento] = useState('')
+  const [telefone, setTelefone] = useState('')
+  const [localidade, setLocalidade] = useState('')
   const [senha, setSenha] = useState('')
   const [error, setError] = useState('')
   const navigate = useNavigate()
@@ -33,7 +35,8 @@ function Register() {
           nome,
           email,
           data_de_nascimento: dataNascimento,
-          telemovel: '',
+          telemovel: telefone,
+          localidade,
           password: senha
         })
       })
@@ -48,8 +51,22 @@ function Register() {
         return
       }
 
-      alert('Conta criada com sucesso! Faça login.')
-      navigate('/login')
+      // Auto login after registration
+      const loginRes = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: senha })
+      })
+
+      if (!loginRes.ok) {
+        alert('Conta criada com sucesso! Faça login manualmente.')
+        navigate('/login')
+        return
+      }
+
+      const loginData = await loginRes.json()
+      localStorage.setItem('cozy_hearts_auth', JSON.stringify({ token: loginData.token, usuario: loginData.usuario }))
+      navigate('/main')
     } catch (err) {
       console.error('Erro no registro:', err)
       setError('Erro de conexão. Verifique se o servidor backend está rodando.')
@@ -80,8 +97,18 @@ function Register() {
             onChange={(e) => setDataNascimento(e.target.value)}
             type="date"
           />
-          <Input icon={<House size={35}/>} placeholder="Morada" />
-          <Input icon={<Building2 size={35}/>} placeholder="Localidade" />
+          <Input
+            icon={<House size={35} />}
+            placeholder="Telemóvel"
+            value={telefone}
+            onChange={(e) => setTelefone(e.target.value)}
+          />
+          <Input
+            icon={<Building2 size={35} />}
+            placeholder="Localidade"
+            value={localidade}
+            onChange={(e) => setLocalidade(e.target.value)}
+          />
 
           <Input
             icon={<Lock size={35} />}

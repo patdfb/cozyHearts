@@ -7,7 +7,7 @@ const router = express.Router()
 // Register a new Usuario
 router.post('/register', upload.single('image'), async (req, res) => {
   try {
-    const { email, password, nome, data_de_nascimento, telemovel } = req.body
+    const { email, password, nome, data_de_nascimento, telemovel, localidade } = req.body
 
     if (!password || password.trim() === '') {
       return res.status(400).json({ error: 'Password is required.' })
@@ -58,6 +58,7 @@ router.post('/register', upload.single('image'), async (req, res) => {
         Nome: nome,
         Data_de_Nascimento: data_de_nascimento,
         Telemovel: telemovel,
+        Localidade: localidade || null,
         Image: imageUrl
       })
       .select()
