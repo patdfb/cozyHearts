@@ -10,7 +10,7 @@ export default function InterestCard({ name, photo, onClick, exclude=true, descr
                 {name}
             </p>
 
-              <p className="w-full text-left text-sm text-text-light">{description}</p>
+              <p className="w-full text-left text-sm line-clamp-2 text-text-light">{description}</p>
             
             {/* TO DO - onclick é suposto ir pra página de mais detalhes do grupo / chat de grupo */}
             {exclude ? (
