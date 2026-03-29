@@ -39,7 +39,7 @@ function MyGroups() {
           return
         }
 
-        const res = await fetch('http://localhost:3000/usuarios/activities', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/usuarios/activities`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${authData.token}`,

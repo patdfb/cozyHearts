@@ -15,7 +15,7 @@ const app = express();
 app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [
-      'https://www.cozyhearts.instituicoes.pt',
+      'https://instituicoes.cozyhearts.pt',
       'http://localhost:5173',
       'http://localhost:5174',
       'http://127.0.0.1:5173',

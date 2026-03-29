@@ -14,6 +14,7 @@ import EventDetails from '../pages/GroupsAndEvents/EventDetails'
 import EventsNearMe from '../pages/EventsNearMe'
 import MyInterests from '../pages/Interests/MyInterests'
 import OtherInterests from '../pages/Interests/OtherInterests'
+import Profile from '../pages/Profile'
 
 const router = createBrowserRouter([
   {
@@ -75,6 +76,14 @@ const router = createBrowserRouter([
   {
     path: '/otherInterests',
     element: <OtherInterests />,
+  },
+  {
+    path: '/profile',
+    element: <Profile />,
+  },
+  {
+    path: '*',
+    element: <Navigate to="/" replace />,
   },
 ])
 

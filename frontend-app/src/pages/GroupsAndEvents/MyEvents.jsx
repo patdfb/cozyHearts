@@ -14,7 +14,7 @@ function MyEvents() {
       setError('')
       const authData = JSON.parse(localStorage.getItem('cozy_hearts_auth') || 'null')
 
-      const allRes = await fetch('http://localhost:3000/atividades')
+      const allRes = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/atividades`)
       if (!allRes.ok) {
         setError('Erro ao buscar eventos')
         setEventos([])
@@ -35,7 +35,7 @@ function MyEvents() {
         return
       }
 
-      const userRes = await fetch('http://localhost:3000/usuarios/activities', {
+      const userRes = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/usuarios/activities`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${authData.token}`,
@@ -80,7 +80,7 @@ function MyEvents() {
         return
       }
 
-      const res = await fetch(`http://localhost:3000/atividades/${id}/join`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/atividades/${id}/join`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authData.token}`,
@@ -110,7 +110,7 @@ function MyEvents() {
         return
       }
 
-      const res = await fetch(`http://localhost:3000/atividades/${id}/leave`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/atividades/${id}/leave`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authData.token}`,

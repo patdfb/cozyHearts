@@ -18,7 +18,7 @@ function EventDetails() {
         setPageError('')
         const authData = JSON.parse(localStorage.getItem('cozy_hearts_auth') || 'null')
 
-        const eventoRes = await fetch(`http://localhost:3000/atividades/${id}`)
+        const eventoRes = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/atividades/${id}`)
         if (!eventoRes.ok) {
           setPageError('Evento não encontrado')
           return
@@ -28,7 +28,7 @@ function EventDetails() {
         setEvento(eventoData)
 
         if (authData?.token) {
-          const activitiesRes = await fetch('http://localhost:3000/usuarios/activities', {
+          const activitiesRes = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/usuarios/activities`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${authData.token}`,
@@ -116,7 +116,7 @@ function EventDetails() {
       }
 
       const endpoint = isSubscribed ? 'leave' : 'join'
-      const res = await fetch(`http://localhost:3000/atividades/${id}/${endpoint}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/atividades/${id}/${endpoint}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authData.token}`,

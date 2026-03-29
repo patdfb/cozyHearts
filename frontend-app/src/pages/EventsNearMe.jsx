@@ -32,7 +32,7 @@ function EventsNearMe() {
       setError('')
       const authData = JSON.parse(localStorage.getItem('cozy_hearts_auth') || 'null')
 
-      const allRes = await fetch('http://localhost:3000/atividades')
+      const allRes = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/atividades`)
       if (!allRes.ok) {
         setError('Erro ao buscar eventos')
         setEventos([])
@@ -47,14 +47,14 @@ function EventsNearMe() {
 
       if (authData?.token) {
         const [activitiesRes, profileRes] = await Promise.all([
-          fetch('http://localhost:3000/usuarios/activities', {
+          fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/usuarios/activities`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${authData.token}`,
               'Content-Type': 'application/json'
             }
           }),
-          fetch('http://localhost:3000/usuarios/profile', {
+          fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/usuarios/profile`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${authData.token}`,
@@ -108,7 +108,7 @@ function EventsNearMe() {
         return
       }
 
-      const res = await fetch(`http://localhost:3000/atividades/${id}/join`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/atividades/${id}/join`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authData.token}`,
@@ -138,7 +138,7 @@ function EventsNearMe() {
         return
       }
 
-      const res = await fetch(`http://localhost:3000/atividades/${id}/leave`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/atividades/${id}/leave`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authData.token}`,
