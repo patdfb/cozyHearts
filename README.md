@@ -26,8 +26,8 @@ Groups created within the app can contact directly the nearby community centers 
 
 ## The Team
 
-- @patdfb
-- @FelipeSiqueira13
-- @pintotomas10
-- @LorenSilva
-- @hugomarques13
+- [Patrícia Bastos](https://github.com/patdfb)
+- [Felipe Siqueira](https://github.com/FelipeSiqueira13)
+- [Tomás Pinto](https://github.com/pintotomas10)
+- [Lóren Silva](https://github.com/LorenSilva)
+- [Hugo Marques](https://github.com/hugomarques13)
